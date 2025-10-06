@@ -1,0 +1,283 @@
+# ==============================================================================
+# ia-agent-fwk Configuration -- Default (Base)
+# ==============================================================================
+# All values can be overridden by environment-specific files or env vars.
+# Env var format: IAFWK_<SECTION>__<KEY>  (double underscore separator)
+#
+# WARNING: Default credentials below are for DEVELOPMENT ONLY.
+# Never use these values in staging or production environments.
+# ==============================================================================
+
+app:
+  name: "ia-agent-fwk"
+  version: "0.1.0"
+  environment: "development"        # development | testing | staging | production
+  debug: false
+  log_level: "INFO"                 # DEBUG | INFO | WARNING | ERROR | CRITICAL
+
+server:
+  host: "0.0.0.0"
+  port: 8000
+  workers: 1                        # Uvicorn workers (production: CPU count * 2 + 1)
+  reload: false                     # Hot-reload (development only)
+  cors:
+    allow_origins: ["*"]
+    allow_methods: ["*"]
+    allow_headers: ["*"]
+
+auth:
+  enabled: true
+  api_key:
+    enabled: true
+    header_name: "X-API-Key"
+  jwt:
+    enabled: false
+    secret_key: ""                  # Override via env: IAFWK_AUTH__JWT__SECRET_KEY
+    algorithm: "HS256"
+    expiration_minutes: 60
+
+database:
+  url: ""                             # Override via env: IAFWK_DATABASE__URL
+  pool_size: 10
+  max_overflow: 20
+  echo: false                       # SQL echo logging
+
+redis:
+  url: "redis://localhost:6380/0"
+  max_connections: 20
+
+llm:
+  default_provider: "openai"
+  providers:
+    openai:
+      api_key: ""                   # Override via env: IAFWK_LLM__PROVIDERS__OPENAI__API_KEY
+      default_model: "gpt-4o"
+      temperature: 0.7
+      max_tokens: 4096
+      timeout: 60
+      retry:
+        max_attempts: 3
+        backoff_base: 2.0
+        backoff_max: 60.0
+      circuit_breaker:
+        enabled: true
+        failure_threshold: 5
+        recovery_timeout: 30.0
+    anthropic:
+      api_key: ""                   # Override via env: IAFWK_LLM__PROVIDERS__ANTHROPIC__API_KEY
+      default_model: "claude-sonnet-4-20250514"
+      temperature: 0.7
+      max_tokens: 4096
+      timeout: 60
+      retry:
+        max_attempts: 3
+        backoff_base: 2.0
+        backoff_max: 60.0
+      circuit_breaker:
+        enabled: true
+        failure_threshold: 5
+        recovery_timeout: 30.0
+    ollama:
+      base_url: "http://localhost:11434"
+      default_model: "llama3.1"
+      temperature: 0.7
+      max_tokens: 4096
+      timeout: 120
+      retry:
+        max_attempts: 3
+        backoff_base: 2.0
+        backoff_max: 60.0
+      circuit_breaker:
+        enabled: true
+        failure_threshold: 5
+        recovery_timeout: 30.0
+    vllm:
+      base_url: "http://localhost:8000/v1"
+      default_model: "meta-llama/Llama-3.1-8B-Instruct"
+      temperature: 0.7
+      max_tokens: 4096
+      timeout: 120
+      retry:
+        max_attempts: 3
+        backoff_base: 2.0
+        backoff_max: 60.0
+      circuit_breaker:
+        enabled: true
+        failure_threshold: 5
+        recovery_timeout: 30.0
+    huggingface:
+      base_url: "cpu"              # Device: cpu | cuda | auto
+      default_model: "gpt2"
+      temperature: 0.7
+      max_tokens: 256
+      timeout: 300
+      retry:
+        max_attempts: 1
+        backoff_base: 2.0
+        backoff_max: 60.0
+      circuit_breaker:
+        enabled: false
+        failure_threshold: 5
+        recovery_timeout: 30.0
+
+agents:
+  default_agent: ""
+  agents: {}
+
+memory:
+  default_backend: "in_memory"
+  embedding:
+    provider: "openai"
+    model: "text-embedding-3-small"
+    api_key: ""                     # Override via env: IAFWK_MEMORY__EMBEDDING__API_KEY
+  backends:
+    in_memory:
+      max_items: 1000
+    conversation:
+      database_url: ""              # Reuse main database URL
+      max_history: 100
+    pgvector:
+      database_url: ""              # Override via env: IAFWK_MEMORY__BACKENDS__PGVECTOR__DATABASE_URL
+      collection_name: "memory_vectors"
+      embedding_dimensions: 1536
+    qdrant:
+      url: "http://localhost:6333"
+      collection_name: "agent_memory"
+      embedding_dimensions: 1536
+    structured:
+      database_url: ""              # Override via env: IAFWK_MEMORY__BACKENDS__STRUCTURED__DATABASE_URL
+      table_name: "memory_kv"
+      default_ttl_seconds: 0
+    weaviate:
+      url: "http://localhost:8080"  # Override via env: IAFWK_MEMORY__BACKENDS__WEAVIATE__URL
+      collection_name: "AgentMemory"
+      embedding_dimensions: 1536
+
+rag:
+  default_embedding_provider: "openai"
+  chunking:
+    strategy: "recursive"           # fixed | recursive | semantic
+    chunk_size: 1000
+    chunk_overlap: 200
+  retrieval:
+    top_k: 5
+    score_threshold: 0.7
+    strategy: "mmr"                 # top_k | mmr
+  storage_backend: "pgvector"       # pgvector | qdrant
+
+execution:
+  mode: "sync"                      # sync | async
+  worker_shutdown_timeout: 300      # seconds to drain in-flight tasks on SIGTERM
+  celery:
+    broker_url: "redis://localhost:6380/0"
+    result_backend: "redis://localhost:6380/0"
+    task_timeout: 300               # seconds -- max wall-clock time per task
+    max_retries: 3
+    worker_concurrency: 4           # concurrent tasks per worker process
+    result_expires: 86400           # seconds -- result TTL (24 hours)
+    worker_prefetch_multiplier: 1   # fair task distribution
+    task_serializer: "json"         # json only (no pickle)
+  scheduler:
+    enabled: false
+    timezone: "UTC"
+
+streaming:
+  sse:
+    enabled: true
+    heartbeat_interval: 15          # seconds
+  websocket:
+    enabled: true
+    ping_interval: 30               # seconds
+    max_connections: 100
+
+plugins:
+  enabled: true
+  discovery_method: "entry_points"  # entry_points | directory
+  plugin_dir: "./plugins"
+  plugin_dirs: []                   # additional directories to scan for plugins
+  auto_load: true
+  plugins: []                       # per-plugin config: [{name: "...", enabled: true, settings: {}}]
+
+integrations:
+  slack:
+    enabled: false
+    bot_token: ""                   # Override via env: IAFWK_INTEGRATIONS__SLACK__BOT_TOKEN
+    signing_secret: ""
+    default_agent: ""
+  email:
+    enabled: false
+    smtp:
+      host: "smtp.gmail.com"
+      port: 587
+      username: ""
+      password: ""
+      use_tls: true
+    imap:
+      host: "imap.gmail.com"
+      port: 993
+      username: ""
+      password: ""
+      use_ssl: true
+    default_agent: ""
+  whatsapp:
+    enabled: false
+    api_url: "https://graph.facebook.com/v18.0"
+    phone_number_id: ""
+    access_token: ""
+    verify_token: ""
+    default_agent: ""
+
+observability:
+  logging:
+    format: "json"                  # json | text
+    level: "INFO"
+    include_timestamp: true
+    include_correlation_id: true
+    redact_pii: true
+    redact_patterns: []
+  tracing:
+    enabled: false
+    exporter: "otlp"               # otlp | jaeger | console
+    endpoint: "http://localhost:4317"
+    service_name: "ia-agent-fwk"
+    sample_rate: 1.0
+  metrics:
+    enabled: false
+    endpoint: "/metrics"
+    include_agent_metrics: true
+    include_tool_metrics: true
+    include_llm_metrics: true
+  prompt_logging:
+    enabled: true
+    log_inputs: true
+    log_outputs: true
+    log_tokens: true
+    log_latency: true
+    redact_sensitive: true
+
+tools:
+  default_timeout: 30.0              # seconds
+  default_permission_mode: "allow_all"  # allow_all | allow_list | deny_list | require_confirmation
+  builtin_tools_enabled: true
+  max_retries: 3                     # Reserved for V2 -- not enforced in V1
+
+orchestration:
+  max_delegation_depth: 3
+  default_workflow_timeout: 600
+  max_parallel_agents: 10
+
+security:
+  rate_limiting:
+    enabled: true
+    default_rate: "60/minute"
+    per_endpoint: {}
+  tool_sandboxing:
+    enabled: true
+    max_execution_time: 30          # seconds
+    allowed_domains: []
+    blocked_domains: []
+  cost_controls:
+    enabled: true
+    max_tokens_per_execution: 50000
+    max_tokens_per_day: 1000000
+    alert_threshold_percentage: 80

@@ -1,0 +1,303 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ia_agent_fwk"
+version = "0.1.0"
+description = "A modular AI agent framework with configuration-driven design."
+license = {text = "MIT"}
+requires-python = ">=3.11"
+authors = [
+    { name = "hperezrodal" },
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Typing :: Typed",
+]
+dependencies = [
+    "pydantic>=2.0,<3.0",
+    "pydantic-settings>=2.0,<3.0",
+    "pyyaml>=6.0,<7.0",
+    "openai>=1.0,<2.0",
+    "anthropic>=0.20,<1.0",
+    "httpx>=0.27,<1.0",
+    "tiktoken>=0.7,<1.0",
+    "fastapi>=0.110,<1.0",
+    "uvicorn[standard]>=0.29,<1.0",
+    "asyncpg>=0.29,<1.0",
+    "qdrant-client>=1.9,<2.0",
+    "numpy>=1.26,<3.0",
+    "celery[redis]>=5.4,<6.0",
+    "redis>=5.0,<6.0",
+    "opentelemetry-api>=1.20,<2.0",
+    "opentelemetry-sdk>=1.20,<2.0",
+    "opentelemetry-exporter-otlp-proto-http>=1.20,<2.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.9.0",
+    "mypy>=1.10.0",
+    "pytest>=8.0",
+    "pytest-cov>=6.0",
+    "pytest-asyncio>=0.24.0",
+    "types-PyYAML>=6.0",
+]
+huggingface = [
+    "transformers>=4.36",
+    "torch>=2.0",
+    "accelerate>=0.25",
+]
+rag = [
+    "pypdf>=4.0",
+    "beautifulsoup4>=4.12",
+    "lxml>=5.0",
+    "python-docx>=1.0",
+]
+weaviate = [
+    "weaviate-client>=4.4",
+]
+slack = [
+    "slack-sdk>=3.0",
+]
+email = [
+    "aiosmtplib>=2.0",
+]
+calendar = [
+    "aiosmtplib>=2.0",
+    "aioimaplib>=1.1.0",
+    "html2text>=2024.2.26",
+    "google-api-python-client>=2.100.0",
+    "google-auth>=2.20.0",
+    "google-auth-oauthlib>=1.2.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ia_agent_fwk"]
+
+# ==============================================================================
+# Ruff
+# ==============================================================================
+[tool.ruff]
+target-version = "py311"
+line-length = 120
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+    # --- Rules that conflict with ruff formatter ---
+    "W191",    # tab indentation (formatter handles this)
+    "E111",    # indentation is not a multiple of X (formatter handles this)
+    "E114",    # indentation is not a multiple of X (comment) (formatter)
+    "E117",    # over-indented (formatter)
+    "D206",    # docstring should be indented with spaces (formatter)
+    "D300",    # use triple double quotes (formatter)
+    "Q000",    # single quotes (formatter)
+    "Q001",    # single quote multiline (formatter)
+    "Q002",    # single quote docstring (formatter)
+    "Q003",    # avoidable escaped quote (formatter)
+    "COM812",  # missing trailing comma (conflicts with formatter)
+    "COM819",  # trailing comma prohibited (conflicts with formatter)
+    "ISC001",  # single line implicit string concatenation (conflicts with formatter)
+    "ISC002",  # multi-line implicit string concatenation (conflicts with formatter)
+
+    # --- Docstring rules (relaxed for early development) ---
+    "D100",    # missing docstring in public module
+    "D101",    # missing docstring in public class
+    "D102",    # missing docstring in public method
+    "D103",    # missing docstring in public function
+    "D104",    # missing docstring in public package
+    "D105",    # missing docstring in magic method
+    "D106",    # missing docstring in public nested class
+    "D107",    # missing docstring in __init__
+    "D203",    # 1 blank line required before class docstring (conflicts with D211)
+    "D213",    # multi-line docstring summary should start at the second line (conflicts with D212)
+
+    # --- Annotation rules handled by mypy ---
+    "ANN401",  # dynamically typed expressions (Any) are disallowed
+
+    # --- Rules too strict for early development ---
+    "ERA001",  # found commented-out code
+    "FIX002",  # line contains TODO
+    "TD002",   # missing author in TODO
+    "TD003",   # missing issue link in TODO
+    "CPY001",  # missing copyright notice at top of file
+
+    # --- Compatibility: runtime may be 3.10 even though target is 3.11+ ---
+    "UP042",   # prefer enum.StrEnum (unavailable on Python 3.10 runtimes)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"src/ia_agent_fwk/rag/loaders/*.py" = [
+    "ASYNC240", # sync pathlib in async loaders (local filesystem I/O)
+    "PLC0415",  # imports inside try/except for optional deps
+]
+"tests/**/*.py" = [
+    "S101",    # assert is fine in tests
+    "ANN",     # no type annotations required in tests
+    "D",       # no docstrings required in tests
+    "PLR2004", # magic value comparison is fine in tests
+    "SLF001",  # private member access is fine in tests
+    "ARG002",  # unused method arguments (mock overrides)
+    "ARG005",  # unused lambda arguments (mock transports)
+    "PLC0415", # imports not at top level (test-local SDK imports)
+    "N801",    # class names (mock classes)
+    "N818",    # exception naming (test exception classes)
+    "RUF012",  # mutable class defaults in mock classes
+    "FBT003",  # boolean positional values in patch() calls
+    "PERF401", # async list comprehensions (readability in tests)
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["ia_agent_fwk"]
+
+# ==============================================================================
+# Mypy
+# ==============================================================================
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+show_error_codes = true
+plugins = ["pydantic.mypy"]
+
+[[tool.mypy.overrides]]
+module = "asyncpg"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "qdrant_client"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "weaviate.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "celery.*"
+ignore_missing_imports = true
+follow_untyped_imports = true
+
+[[tool.mypy.overrides]]
+module = "ia_agent_fwk.execution.*"
+disallow_untyped_calls = false
+disallow_untyped_decorators = false
+
+[[tool.mypy.overrides]]
+module = "opentelemetry.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "pypdf.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "docx.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "bs4.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "lxml.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "aiosmtplib"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "aioimaplib"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "html2text"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "googleapiclient.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "google.auth.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "google.oauth2.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "google_auth_oauthlib.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "transformers"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "transformers.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "torch"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "torch.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "accelerate.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "slack_sdk.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+
+# ==============================================================================
+# Pytest
+# ==============================================================================
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+markers = [
+    "unit: Unit tests (fast, no external dependencies)",
+    "integration: Integration tests (require Docker services)",
+    "e2e: End-to-end tests (full system tests)",
+]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+]
+
+# ==============================================================================
+# Coverage
+# ==============================================================================
+[tool.coverage.run]
+source = ["src/ia_agent_fwk"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+skip_empty = true
+fail_under = 80

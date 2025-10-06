@@ -1,0 +1,60 @@
+# ==============================================================================
+# ia-agent-fwk Configuration -- Testing Profile
+# ==============================================================================
+# Overrides for automated testing (pytest, CI). Applied on top of default.yaml.
+# Enable with: IAFWK_APP__ENVIRONMENT=testing
+# ==============================================================================
+
+app:
+  environment: "testing"
+  debug: false
+  log_level: "WARNING"
+
+server:
+  reload: false
+  workers: 1
+
+auth:
+  enabled: false                    # Disable auth in tests
+
+database:
+  url: "postgresql+asyncpg://postgres:postgres@localhost:5432/ia_agent_fwk_test"
+  pool_size: 5
+  max_overflow: 5
+  echo: false
+
+redis:
+  url: "redis://localhost:6379/1"   # Use a separate Redis database for tests
+
+memory:
+  default_backend: "in_memory"      # In-memory backends for fast tests
+
+execution:
+  mode: "sync"                      # Synchronous execution in tests
+
+plugins:
+  enabled: false
+  auto_load: false
+
+integrations:
+  slack:
+    enabled: false
+  email:
+    enabled: false
+  whatsapp:
+    enabled: false
+
+observability:
+  logging:
+    format: "text"
+    level: "WARNING"
+  tracing:
+    enabled: false
+  metrics:
+    enabled: false
+  prompt_logging:
+    enabled: false
+
+security:
+  rate_limiting:
+    enabled: false
