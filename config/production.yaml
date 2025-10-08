@@ -1,0 +1,68 @@
+# ==============================================================================
+# ia-agent-fwk Configuration -- Production Profile
+# ==============================================================================
+# Production settings. All secrets MUST be provided via environment variables.
+# Enable with: IAFWK_APP__ENVIRONMENT=production
+#
+# Required env vars for production:
+#   IAFWK_DATABASE__URL
+#   IAFWK_REDIS__URL
+#   IAFWK_AUTH__JWT__SECRET_KEY
+#   IAFWK_LLM__PROVIDERS__OPENAI__API_KEY  (or other provider keys)
+# ==============================================================================
+
+app:
+  environment: "production"
+  debug: false
+  log_level: "INFO"
+
+server:
+  reload: false
+  workers: 4                        # Adjust based on CPU count
+
+auth:
+  enabled: true
+  jwt:
+    enabled: true
+    # REQUIRED: Set IAFWK_AUTH__JWT__SECRET_KEY env var for production
+
+database:
+  pool_size: 20
+  max_overflow: 40
+  echo: false
+
+redis:
+  max_connections: 50
+
+execution:
+  mode: "async"
+
+streaming:
+  websocket:
+    max_connections: 500
+
+plugins:
+  enabled: true
+  auto_load: true
+
+observability:
+  logging:
+    format: "json"
+    level: "INFO"
+    redact_pii: true
+  tracing:
+    enabled: true
+    sample_rate: 0.1
+  metrics:
+    enabled: true
+  prompt_logging:
+    redact_sensitive: true
+
+security:
+  rate_limiting:
+    enabled: true
+    default_rate: "120/minute"
+  tool_sandboxing:
+    enabled: true
+  cost_controls:
+    enabled: true

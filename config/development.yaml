@@ -1,0 +1,28 @@
+# ==============================================================================
+# ia-agent-fwk Configuration -- Development Profile
+# ==============================================================================
+# Overrides for local development. Applied on top of default.yaml.
+# Enable with: IAFWK_APP__ENVIRONMENT=development
+# ==============================================================================
+
+app:
+  environment: "development"
+  debug: true
+  log_level: "DEBUG"
+
+server:
+  reload: true
+  workers: 1
+
+database:
+  url: "postgresql+asyncpg://postgres:postgres@localhost:5432/ia_agent_fwk"
+  echo: true                        # Log SQL queries for debugging
+
+observability:
+  logging:
+    format: "text"                  # Human-readable logs in dev
+    level: "DEBUG"
+  tracing:
+    enabled: false
+  metrics:
+    enabled: false

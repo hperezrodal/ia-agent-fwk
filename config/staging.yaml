@@ -1,0 +1,46 @@
+# ==============================================================================
+# ia-agent-fwk Configuration -- Staging Profile
+# ==============================================================================
+# Production-like settings with lower resource limits.
+# Enable with: IAFWK_APP__ENVIRONMENT=staging
+# ==============================================================================
+
+app:
+  environment: "staging"
+  debug: false
+  log_level: "INFO"
+
+server:
+  reload: false
+  workers: 2
+
+auth:
+  enabled: true
+
+database:
+  pool_size: 5
+  max_overflow: 10
+  echo: false
+
+redis:
+  max_connections: 10
+
+execution:
+  mode: "async"
+
+streaming:
+  websocket:
+    max_connections: 50
+
+observability:
+  logging:
+    format: "json"
+    level: "INFO"
+  tracing:
+    enabled: true
+  metrics:
+    enabled: true
+
+security:
+  rate_limiting:
+    enabled: true
