@@ -1,0 +1,89 @@
+CONTRATO DE PRESTACIÓN DE SERVICIOS TECNOLÓGICOS
+
+Contrato No. CST-2025-0147
+Fecha de firma: 15 de Marzo, 2025
+
+ENTRE LAS PARTES:
+
+PRIMERA PARTE (CONTRATANTE):
+Nombre: Distribuidora del Pacífico S.A. de C.V.
+RFC: DPA-150301-XX1
+Representante Legal: Lic. Roberto Méndez Gutiérrez
+Dirección: Av. Reforma 2450, Piso 12, Col. Juárez, CDMX, CP 06600
+Correo: roberto.mendez@distribuidorapacifico.com.mx
+Teléfono: +52 55 4123 8900
+
+SEGUNDA PARTE (PROVEEDOR):
+Nombre: CloudTech Solutions S.A.
+RFC: CTS-200815-AB2
+Representante Legal: Ing. María Fernanda López Castillo
+Dirección: Blvd. Manuel Ávila Camacho 36, Lomas de Chapultepec, CDMX, CP 11000
+Correo: maria.lopez@cloudtechsolutions.com
+Teléfono: +52 55 9876 5432
+
+CLÁUSULA PRIMERA - OBJETO DEL CONTRATO
+
+El PROVEEDOR se obliga a prestar al CONTRATANTE los siguientes servicios:
+
+a) Migración de infraestructura on-premise a nube AWS (fase 1: abril-junio 2025)
+b) Desarrollo e implementación de sistema ERP personalizado
+c) Soporte técnico 24/7 con SLA de respuesta de 2 horas
+d) Capacitación al personal (mínimo 40 horas)
+e) Monitoreo y mantenimiento preventivo mensual
+
+CLÁUSULA SEGUNDA - PLAZO
+
+El presente contrato entrará en vigor el 1 de Abril de 2025 y tendrá una
+duración de veinticuatro (24) meses, concluyendo el 31 de Marzo de 2027.
+
+Renovación automática: Sí, por períodos iguales de 12 meses, salvo notificación
+escrita con 60 días de anticipación.
+
+CLÁUSULA TERCERA - CONTRAPRESTACIÓN
+
+El CONTRATANTE pagará al PROVEEDOR las siguientes cantidades:
+
+  - Fase de migración (pago único): $450,000.00 MXN + IVA
+  - Desarrollo ERP (3 pagos): $280,000.00 MXN + IVA cada uno ($840,000.00 total)
+  - Soporte mensual: $85,000.00 MXN + IVA
+  - Capacitación: $120,000.00 MXN + IVA (pago único)
+
+Valor total estimado del contrato (24 meses): $3,450,000.00 MXN + IVA
+
+Forma de pago: Transferencia bancaria a 30 días naturales fecha factura.
+Banco: BBVA México
+Cuenta: 0118 0001 2345 6789
+CLABE: 012180001234567891
+
+CLÁUSULA CUARTA - PENALIZACIONES
+
+a) Por retraso en entregables: 0.5% del valor de la fase por cada día natural
+   de retraso, hasta un máximo del 10%.
+b) Por incumplimiento del SLA: Descuento del 15% en la factura mensual de soporte
+   si el tiempo de respuesta promedio supera las 4 horas.
+c) Por terminación anticipada sin causa: La parte que termine pagará al otro
+   una penalización equivalente a 3 meses de servicio ($255,000.00 MXN).
+
+CLÁUSULA QUINTA - CONFIDENCIALIDAD
+
+Ambas partes se obligan a mantener confidencial toda información técnica,
+comercial y financiera intercambiada, por un período de 5 años contados
+a partir de la terminación del contrato.
+
+CLÁUSULA SEXTA - PROPIEDAD INTELECTUAL
+
+Todo el software desarrollado bajo este contrato será propiedad exclusiva
+del CONTRATANTE. El PROVEEDOR cede todos los derechos patrimoniales.
+
+CLÁUSULA SÉPTIMA - JURISDICCIÓN
+
+Para la interpretación y cumplimiento del presente contrato, las partes
+se someten a la jurisdicción de los tribunales competentes de la Ciudad
+de México, renunciando a cualquier otro fuero que pudiera corresponderles.
+
+FIRMAS:
+
+_________________________          _________________________
+Lic. Roberto Méndez Gutiérrez     Ing. María Fernanda López Castillo
+Distribuidora del Pacífico S.A.    CloudTech Solutions S.A.
+Representante Legal                Representante Legal

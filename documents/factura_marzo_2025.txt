@@ -1,0 +1,57 @@
+FACTURA FISCAL DIGITAL
+
+Folio: FAC-2025-03-0089
+Fecha de emisión: 1 de Marzo, 2025
+Fecha de vencimiento: 31 de Marzo, 2025
+
+EMISOR:
+CloudTech Solutions S.A.
+RFC: CTS-200815-AB2
+Blvd. Manuel Ávila Camacho 36, Lomas de Chapultepec, CDMX
+Régimen fiscal: Régimen General de Ley Personas Morales
+Correo: facturacion@cloudtechsolutions.com
+
+RECEPTOR:
+Distribuidora del Pacífico S.A. de C.V.
+RFC: DPA-150301-XX1
+Av. Reforma 2450, Piso 12, Col. Juárez, CDMX
+Uso CFDI: G03 - Gastos en general
+
+CONCEPTOS:
+
+1. Servicio de soporte técnico 24/7 - Febrero 2025
+   Cantidad: 1 servicio
+   Precio unitario: $85,000.00
+   Importe: $85,000.00
+
+2. Horas adicionales de consultoría especializada
+   Cantidad: 12 horas
+   Precio unitario: $2,500.00
+   Importe: $30,000.00
+
+3. Licencias de software de monitoreo (trimestral)
+   Cantidad: 1 paquete
+   Precio unitario: $18,500.00
+   Importe: $18,500.00
+
+RESUMEN:
+
+   Subtotal:     $133,500.00
+   IVA (16%):     $21,360.00
+   Total:        $154,860.00
+
+Cantidad con letra: Ciento cincuenta y cuatro mil ochocientos sesenta pesos 00/100 MXN
+
+DATOS BANCARIOS PARA PAGO:
+Banco: BBVA México
+Beneficiario: CloudTech Solutions S.A.
+Cuenta: 0118 0001 2345 6789
+CLABE: 012180001234567891
+Referencia: FAC-2025-03-0089
+
+CONDICIONES DE PAGO:
+- Pago a 30 días naturales
+- Después del vencimiento se aplicará un interés moratorio del 3% mensual
+- Para aclaraciones contactar a: Patricia Ruiz, patricia.ruiz@cloudtechsolutions.com
+
+Sello digital del SAT: aBcDeFgHiJkLmNoPqRsTuVwXyZ...

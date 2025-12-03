@@ -1,0 +1,49 @@
+INVOICE
+
+Invoice Number: INV-2025-0042
+Date: March 1, 2025
+Due Date: March 31, 2025
+
+FROM:
+Tech Solutions Inc.
+123 Innovation Drive
+San Francisco, CA 94105
+billing@techsolutions.com
+
+TO:
+Riverside Manufacturing Co.
+456 Industrial Blvd
+Portland, OR 97201
+accounts@riverside-mfg.com
+
+ITEMS
+
+1. Cloud Infrastructure Setup
+   Quantity: 1
+   Unit Price: $12,500.00
+   Total: $12,500.00
+
+2. API Integration Development (40 hours)
+   Quantity: 40
+   Unit Price: $200.00
+   Total: $8,000.00
+
+3. Monthly Monitoring Service (3 months)
+   Quantity: 3
+   Unit Price: $1,500.00
+   Total: $4,500.00
+
+SUMMARY
+
+Subtotal: $25,000.00
+Tax (8.5%): $2,125.00
+Total Due: $27,125.00
+
+PAYMENT TERMS
+
+Payment is due within 30 days of invoice date.
+Please remit payment to: Tech Solutions Inc.
+Bank: First National Bank
+Account: 9876543210
+
+For questions about this invoice, contact Sarah Johnson at billing@techsolutions.com.
