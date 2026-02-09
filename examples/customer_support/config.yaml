@@ -1,0 +1,32 @@
+# Customer Support Agent Configuration
+# ======================================
+# This file configures the customer support agent example.
+# Copy and modify for your own deployment.
+
+agent:
+  name: "customer-support-agent"
+  agent_type: "customer_support"
+  provider_name: "openai"
+  model: "gpt-4o"
+  max_iterations: 10
+  execution_timeout: 120
+  max_tokens_per_response: 4096
+  tools:
+    - "ticket_lookup"
+    - "faq_search"
+    - "escalation"
+    - "response_draft"
+
+# LLM provider configuration
+llm:
+  providers:
+    openai:
+      model: "gpt-4o"
+      api_key: "${OPENAI_API_KEY}"
+      temperature: 0.3
+      max_tokens: 4096
+
+# Data paths (relative to the example directory)
+data:
+  tickets_path: "data/tickets.json"
+  faq_path: "data/faq.json"

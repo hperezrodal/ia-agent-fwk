@@ -1,0 +1,82 @@
+[
+  {
+    "ticket_id": "TKT-001",
+    "customer_name": "Alice Johnson",
+    "subject": "Unable to log in to my account",
+    "status": "open",
+    "priority": "high",
+    "description": "I have been unable to log in to my account since yesterday. I keep getting an 'invalid credentials' error even though I am using the correct password.",
+    "created_at": "2026-03-08T10:30:00Z",
+    "updated_at": "2026-03-08T10:30:00Z"
+  },
+  {
+    "ticket_id": "TKT-002",
+    "customer_name": "Bob Martinez",
+    "subject": "Billing discrepancy on last invoice",
+    "status": "open",
+    "priority": "medium",
+    "description": "My last invoice shows a charge of $149.99 but my plan is $99.99 per month. I was not notified of any price change.",
+    "created_at": "2026-03-07T14:15:00Z",
+    "updated_at": "2026-03-08T09:00:00Z"
+  },
+  {
+    "ticket_id": "TKT-003",
+    "customer_name": "Carol Davis",
+    "subject": "Feature request: dark mode",
+    "status": "open",
+    "priority": "low",
+    "description": "I would love to have a dark mode option in the application. It would be much easier on the eyes during late-night work sessions.",
+    "created_at": "2026-03-06T08:45:00Z",
+    "updated_at": "2026-03-06T08:45:00Z"
+  },
+  {
+    "ticket_id": "TKT-004",
+    "customer_name": "David Chen",
+    "subject": "Data export not working",
+    "status": "in_progress",
+    "priority": "high",
+    "description": "When I try to export my data as CSV, the download starts but the file is empty. I have tried multiple browsers and the issue persists.",
+    "created_at": "2026-03-05T16:20:00Z",
+    "updated_at": "2026-03-07T11:30:00Z"
+  },
+  {
+    "ticket_id": "TKT-005",
+    "customer_name": "Eva Rodriguez",
+    "subject": "Account upgrade request",
+    "status": "pending",
+    "priority": "medium",
+    "description": "I would like to upgrade my account from the Basic plan to the Professional plan. Please let me know the steps and any prorated charges.",
+    "created_at": "2026-03-04T12:00:00Z",
+    "updated_at": "2026-03-05T09:15:00Z"
+  },
+  {
+    "ticket_id": "TKT-006",
+    "customer_name": "Frank Kim",
+    "subject": "API rate limiting issues",
+    "status": "open",
+    "priority": "urgent",
+    "description": "Our integration is hitting rate limits even though we are well below the documented thresholds. This is impacting our production system.",
+    "created_at": "2026-03-09T07:00:00Z",
+    "updated_at": "2026-03-09T07:00:00Z"
+  },
+  {
+    "ticket_id": "TKT-007",
+    "customer_name": "Grace Patel",
+    "subject": "Password reset email not received",
+    "status": "resolved",
+    "priority": "medium",
+    "description": "I requested a password reset but never received the email. I have checked my spam folder as well.",
+    "created_at": "2026-03-03T09:30:00Z",
+    "updated_at": "2026-03-04T14:00:00Z"
+  },
+  {
+    "ticket_id": "TKT-008",
+    "customer_name": "Henry Wilson",
+    "subject": "Slow dashboard loading times",
+    "status": "in_progress",
+    "priority": "medium",
+    "description": "The main dashboard takes over 30 seconds to load. This started about a week ago and has not improved.",
+    "created_at": "2026-03-02T11:45:00Z",
+    "updated_at": "2026-03-06T16:30:00Z"
+  }
+]
