@@ -1,0 +1,29 @@
+# Document Processor Agent -- example configuration
+#
+# This file shows how to configure the document processor agent via YAML.
+# Override any value with an environment variable prefixed with IAFWK_
+# (e.g. IAFWK_LLM__PROVIDER_NAME=anthropic).
+
+agent:
+  name: document-processor
+  agent_type: document_processor
+  system_prompt: |
+    You are a document analysis agent.  When given a document, use the
+    available tools to extract text, identify sections, extract entities,
+    and produce a summary.  Respond with structured JSON.
+  max_iterations: 10
+  execution_timeout: 300
+  max_tokens_per_response: 4096
+  tools:
+    - text_extractor
+    - section_identifier
+    - entity_extractor
+    - summarizer
+
+llm:
+  provider_name: openai
+  model: gpt-4o-mini
+
+tools:
+  sandboxing:
+    enabled: false

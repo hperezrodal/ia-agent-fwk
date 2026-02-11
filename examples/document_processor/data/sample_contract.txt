@@ -1,0 +1,42 @@
+SERVICE AGREEMENT
+
+This Service Agreement ("Agreement") is entered into as of January 15, 2025,
+by and between Acme Corporation ("Provider") and Global Industries LLC ("Client").
+
+1. SCOPE OF SERVICES
+
+The Provider agrees to deliver the following services to the Client:
+
+  a) Software development and maintenance
+  b) Technical consulting and advisory services
+  c) System integration and deployment support
+
+2. TERM AND TERMINATION
+
+This Agreement shall commence on February 1, 2025 and shall remain in effect
+until January 31, 2026, unless terminated earlier in accordance with this section.
+
+Either party may terminate this Agreement by providing thirty (30) days written
+notice to the other party.
+
+3. COMPENSATION
+
+The Client agrees to pay the Provider the following fees:
+
+  - Monthly retainer: $15,000.00
+  - Hourly rate for additional work: $250.00
+  - Annual performance bonus (if applicable): $50,000.00
+
+Total estimated annual value: $230,000.00
+
+4. CONFIDENTIALITY
+
+Both parties agree to maintain the confidentiality of all proprietary information
+shared during the course of this Agreement.
+
+5. CONTACT INFORMATION
+
+Provider Contact: John Smith, john.smith@acmecorp.com
+Client Contact: Jane Doe, jane.doe@globalind.com
+
+Signed on this 15th day of January, 2025.
