@@ -1,0 +1,106 @@
+{
+  "income_statement": [
+    {
+      "period": "2024-Q1",
+      "revenue": 2500000,
+      "cost_of_goods_sold": 1500000,
+      "gross_profit": 1000000,
+      "operating_expenses": 600000,
+      "operating_income": 400000,
+      "interest_expense": 25000,
+      "tax_expense": 93750,
+      "net_income": 281250
+    },
+    {
+      "period": "2024-Q2",
+      "revenue": 2800000,
+      "cost_of_goods_sold": 1620000,
+      "gross_profit": 1180000,
+      "operating_expenses": 650000,
+      "operating_income": 530000,
+      "interest_expense": 24000,
+      "tax_expense": 126500,
+      "net_income": 379500
+    },
+    {
+      "period": "2024-Q3",
+      "revenue": 3100000,
+      "cost_of_goods_sold": 1798000,
+      "gross_profit": 1302000,
+      "operating_expenses": 700000,
+      "operating_income": 602000,
+      "interest_expense": 23000,
+      "tax_expense": 144750,
+      "net_income": 434250
+    },
+    {
+      "period": "2024-Q4",
+      "revenue": 3400000,
+      "cost_of_goods_sold": 1972000,
+      "gross_profit": 1428000,
+      "operating_expenses": 750000,
+      "operating_income": 678000,
+      "interest_expense": 22000,
+      "tax_expense": 164000,
+      "net_income": 492000
+    }
+  ],
+  "balance_sheet": [
+    {
+      "period": "2024-Q1",
+      "total_assets": 8500000,
+      "current_assets": 3200000,
+      "cash": 1200000,
+      "accounts_receivable": 800000,
+      "inventory": 700000,
+      "fixed_assets": 5300000,
+      "total_liabilities": 4500000,
+      "current_liabilities": 1800000,
+      "long_term_debt": 2700000,
+      "total_debt": 4500000,
+      "shareholders_equity": 4000000
+    },
+    {
+      "period": "2024-Q2",
+      "total_assets": 9000000,
+      "current_assets": 3500000,
+      "cash": 1400000,
+      "accounts_receivable": 850000,
+      "inventory": 750000,
+      "fixed_assets": 5500000,
+      "total_liabilities": 4600000,
+      "current_liabilities": 1750000,
+      "long_term_debt": 2850000,
+      "total_debt": 4600000,
+      "shareholders_equity": 4400000
+    },
+    {
+      "period": "2024-Q3",
+      "total_assets": 9600000,
+      "current_assets": 3800000,
+      "cash": 1650000,
+      "accounts_receivable": 900000,
+      "inventory": 780000,
+      "fixed_assets": 5800000,
+      "total_liabilities": 4700000,
+      "current_liabilities": 1700000,
+      "long_term_debt": 3000000,
+      "total_debt": 4700000,
+      "shareholders_equity": 4900000
+    },
+    {
+      "period": "2024-Q4",
+      "total_assets": 10200000,
+      "current_assets": 4100000,
+      "cash": 1900000,
+      "accounts_receivable": 950000,
+      "inventory": 800000,
+      "fixed_assets": 6100000,
+      "total_liabilities": 4800000,
+      "current_liabilities": 1650000,
+      "long_term_debt": 3150000,
+      "total_debt": 4800000,
+      "shareholders_equity": 5400000
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "transactions": [
+    {"id": "TXN-001", "date": "2024-01-05", "amount": 12500.00, "description": "Office supplies", "category": "operating"},
+    {"id": "TXN-002", "date": "2024-01-12", "amount": 45000.00, "description": "Server infrastructure", "category": "capital"},
+    {"id": "TXN-003", "date": "2024-01-15", "amount": 8200.00, "description": "Marketing campaign", "category": "operating"},
+    {"id": "TXN-004", "date": "2024-01-20", "amount": 3500.00, "description": "Travel expenses", "category": "operating"},
+    {"id": "TXN-005", "date": "2024-01-25", "amount": 15000.00, "description": "Consulting fees", "category": "operating"},
+    {"id": "TXN-006", "date": "2024-02-01", "amount": 7800.00, "description": "Software licenses", "category": "operating"},
+    {"id": "TXN-007", "date": "2024-02-10", "amount": 250000.00, "description": "Unusual large payment - equipment", "category": "capital"},
+    {"id": "TXN-008", "date": "2024-02-15", "amount": 11000.00, "description": "Insurance premium", "category": "operating"},
+    {"id": "TXN-009", "date": "2024-02-20", "amount": 9500.00, "description": "Utilities", "category": "operating"},
+    {"id": "TXN-010", "date": "2024-02-28", "amount": 6000.00, "description": "Office maintenance", "category": "operating"},
+    {"id": "TXN-011", "date": "2024-03-05", "amount": 4200.00, "description": "Training program", "category": "operating"},
+    {"id": "TXN-012", "date": "2024-03-10", "amount": 500.00, "description": "Suspiciously small refund", "category": "adjustment"},
+    {"id": "TXN-013", "date": "2024-03-15", "amount": 13500.00, "description": "Product inventory", "category": "inventory"},
+    {"id": "TXN-014", "date": "2024-03-20", "amount": 175000.00, "description": "Quarterly lease payment", "category": "operating"},
+    {"id": "TXN-015", "date": "2024-03-25", "amount": 8800.00, "description": "Professional services", "category": "operating"},
+    {"id": "TXN-016", "date": "2024-03-28", "amount": 22000.00, "description": "R&D materials", "category": "operating"},
+    {"id": "TXN-017", "date": "2024-03-30", "amount": 5500.00, "description": "Employee reimbursement", "category": "operating"},
+    {"id": "TXN-018", "date": "2024-03-31", "amount": 350000.00, "description": "End-of-quarter bulk purchase", "category": "capital"},
+    {"id": "TXN-019", "date": "2024-03-31", "amount": 7000.00, "description": "Accounting fees", "category": "operating"},
+    {"id": "TXN-020", "date": "2024-03-31", "amount": 10500.00, "description": "Legal services", "category": "operating"}
+  ]
+}

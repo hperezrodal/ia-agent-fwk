@@ -1,0 +1,29 @@
+# Finance Agent Configuration
+# ============================
+# Example YAML config for the financial analysis agent.
+#
+# Usage:
+#   from ia_agent_fwk.config.settings import load_settings
+#   settings = load_settings("examples/finance/config.yaml")
+
+agent:
+  name: finance-agent
+  agent_type: finance
+  system_prompt: |
+    You are a financial analysis assistant. Your role is to analyze financial data,
+    calculate key ratios, detect anomalies, and generate structured reports.
+  provider_name: openai
+  model: gpt-4o
+  max_iterations: 10
+  execution_timeout: 300
+  max_tokens_per_response: 4096
+  tools:
+    - financial_data_lookup
+    - ratio_calculator
+    - anomaly_detector
+    - report_generator
+
+tools:
+  sandboxing:
+    enabled: true
+    allowed_domains: []
