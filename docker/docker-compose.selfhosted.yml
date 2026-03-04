@@ -1,0 +1,310 @@
+# ==============================================================================
+# ia-agent-fwk -- Self-Hosted Docker Compose (AI Privacy Mode)
+# ==============================================================================
+# Fully self-contained stack: API + Ollama (local LLM) + Redis
+# No external API calls. All AI inference runs locally.
+#
+#   1. Start:   docker compose -f docker/docker-compose.selfhosted.yml up -d
+#   2. Pull model (first time only):
+#      docker compose -f docker/docker-compose.selfhosted.yml exec ollama ollama pull llama3.2
+#   3. Test:    curl http://localhost:8000/health
+#   4. Run agent:
+#      curl -X POST http://localhost:8000/api/v1/agents/customer_support/run \
+#        -H "Content-Type: application/json" \
+#        -H "X-API-Key: dev-api-key" \
+#        -d '{"prompt": "Can you look up ticket TKT-001?"}'
+#
+#   Stop:   docker compose -f docker/docker-compose.selfhosted.yml down
+#   Reset:  docker compose -f docker/docker-compose.selfhosted.yml down -v
+# ==============================================================================
+
+volumes:
+  ollama_data:
+  redisdata:
+  qdrantdata:
+  prometheus_data:
+  grafana_data:
+  loki_data:
+  tempo_data:
+
+services:
+  # --------------------------------------------------------------------------
+  # Ollama -- Local LLM inference (no external API calls)
+  # --------------------------------------------------------------------------
+  ollama:
+    image: ollama/ollama:latest
+    volumes:
+      - ollama_data:/root/.ollama
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+  # --------------------------------------------------------------------------
+  # Redis (message broker + result backend)
+  # --------------------------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    command: redis-server --appendonly yes
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    restart: unless-stopped
+
+  # --------------------------------------------------------------------------
+  # Qdrant -- Vector database for RAG
+  # --------------------------------------------------------------------------
+  qdrant:
+    image: qdrant/qdrant:v1.12.6
+    volumes:
+      - qdrantdata:/qdrant/storage
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/localhost/6333' || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+    restart: unless-stopped
+
+  # --------------------------------------------------------------------------
+  # API Server -- configured to use Ollama
+  # --------------------------------------------------------------------------
+  api:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    command: ["api"]
+    ports:
+      - "${API_PORT:-8000}:8000"
+    volumes:
+      - ../documents:/app/documents:ro
+    environment:
+      # Documents directory (mounted volume)
+      DOCUMENTS_DIR: "/app/documents"
+      # LLM: use Ollama (local, no API keys needed)
+      IAFWK_LLM__DEFAULT_PROVIDER: "ollama"
+      IAFWK_LLM__PROVIDERS__OLLAMA__BASE_URL: "http://ollama:11434"
+      IAFWK_LLM__PROVIDERS__OLLAMA__DEFAULT_MODEL: "${OLLAMA_MODEL:-llama3.2}"
+      IAFWK_LLM__PROVIDERS__OLLAMA__TEMPERATURE: "0.3"
+      IAFWK_LLM__PROVIDERS__OLLAMA__MAX_TOKENS: "4096"
+      IAFWK_LLM__PROVIDERS__OLLAMA__TIMEOUT: "120"
+      # Redis
+      IAFWK_REDIS__URL: "redis://redis:6379/0"
+      IAFWK_EXECUTION__CELERY__BROKER_URL: "redis://redis:6379/0"
+      IAFWK_EXECUTION__CELERY__RESULT_BACKEND: "redis://redis:6379/0"
+      # Auth: simple API key for the demo
+      IAFWK_API_KEYS: "${IAFWK_API_KEYS:-dev-api-key}"
+      # Memory: use Qdrant as vector backend with Ollama embeddings
+      IAFWK_MEMORY__DEFAULT_BACKEND: "qdrant"
+      IAFWK_MEMORY__BACKENDS__QDRANT__URL: "http://qdrant:6333"
+      IAFWK_MEMORY__BACKENDS__QDRANT__COLLECTION_NAME: "documents"
+      IAFWK_MEMORY__BACKENDS__QDRANT__EMBEDDING_DIMENSIONS: "768"
+      IAFWK_MEMORY__EMBEDDING__PROVIDER: "ollama"
+      IAFWK_MEMORY__EMBEDDING__MODEL: "nomic-embed-text"
+      IAFWK_MEMORY__EMBEDDING__BASE_URL: "http://ollama:11434"
+      # Observability: structured JSON logging + tracing
+      IAFWK_OBSERVABILITY__LOGGING__FORMAT: "json"
+      IAFWK_OBSERVABILITY__LOGGING__LEVEL: "INFO"
+      IAFWK_OBSERVABILITY__TRACING__ENABLED: "true"
+      IAFWK_OBSERVABILITY__TRACING__EXPORTER: "otlp-http"
+      IAFWK_OBSERVABILITY__TRACING__ENDPOINT: "http://tempo:4318"
+      IAFWK_OBSERVABILITY__TRACING__SERVICE_NAME: "ia-agent-fwk"
+      # Workers
+      # Single worker ensures in-memory MetricsCollector is consistent
+      # for Prometheus scraping (no split across processes).
+      UVICORN_WORKERS: "${UVICORN_WORKERS:-1}"
+    depends_on:
+      ollama:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      qdrant:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "python3 -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/health')\" || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+
+  # --------------------------------------------------------------------------
+  # Celery Worker -- Background agent execution
+  # --------------------------------------------------------------------------
+  worker:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    command: ["worker"]
+    environment:
+      IAFWK_LLM__DEFAULT_PROVIDER: "ollama"
+      IAFWK_LLM__PROVIDERS__OLLAMA__BASE_URL: "http://ollama:11434"
+      IAFWK_LLM__PROVIDERS__OLLAMA__DEFAULT_MODEL: "${OLLAMA_MODEL:-llama3.2}"
+      IAFWK_LLM__PROVIDERS__OLLAMA__TEMPERATURE: "0.3"
+      IAFWK_LLM__PROVIDERS__OLLAMA__MAX_TOKENS: "4096"
+      IAFWK_LLM__PROVIDERS__OLLAMA__TIMEOUT: "120"
+      IAFWK_REDIS__URL: "redis://redis:6379/0"
+      IAFWK_EXECUTION__CELERY__BROKER_URL: "redis://redis:6379/0"
+      IAFWK_EXECUTION__CELERY__RESULT_BACKEND: "redis://redis:6379/0"
+      IAFWK_MEMORY__DEFAULT_BACKEND: "qdrant"
+      IAFWK_MEMORY__BACKENDS__QDRANT__URL: "http://qdrant:6333"
+      IAFWK_MEMORY__BACKENDS__QDRANT__COLLECTION_NAME: "documents"
+      IAFWK_MEMORY__BACKENDS__QDRANT__EMBEDDING_DIMENSIONS: "768"
+      IAFWK_MEMORY__EMBEDDING__PROVIDER: "ollama"
+      IAFWK_MEMORY__EMBEDDING__MODEL: "nomic-embed-text"
+      IAFWK_MEMORY__EMBEDDING__BASE_URL: "http://ollama:11434"
+      IAFWK_OBSERVABILITY__LOGGING__FORMAT: "json"
+      IAFWK_OBSERVABILITY__LOGGING__LEVEL: "INFO"
+      CELERY_CONCURRENCY: "${CELERY_CONCURRENCY:-2}"
+    depends_on:
+      ollama:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      qdrant:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # --------------------------------------------------------------------------
+  # cAdvisor -- Docker container resource metrics
+  # --------------------------------------------------------------------------
+  cadvisor:
+    image: ghcr.io/google/cadvisor:latest
+    ports:
+      - "${CADVISOR_PORT:-8081}:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    privileged: true
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/healthz || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+  # --------------------------------------------------------------------------
+  # Prometheus -- Metrics collection & storage
+  # --------------------------------------------------------------------------
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "${PROMETHEUS_PORT:-9090}:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.retention.time=15d"
+    depends_on:
+      api:
+        condition: service_healthy
+      cadvisor:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:9090/-/healthy || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+  # --------------------------------------------------------------------------
+  # Tempo -- Distributed tracing backend (receives OTLP spans)
+  # --------------------------------------------------------------------------
+  tempo:
+    image: grafana/tempo:2.4.1
+    command: ["-config.file=/etc/tempo/tempo-config.yml"]
+    volumes:
+      - ./tempo/tempo-config.yml:/etc/tempo/tempo-config.yml:ro
+      - tempo_data:/var/tempo
+    ports:
+      - "${TEMPO_PORT:-3200}:3200"    # Tempo API
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3200/ready || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+    restart: unless-stopped
+
+  # --------------------------------------------------------------------------
+  # Loki -- Log aggregation (centralized storage for all container logs)
+  # --------------------------------------------------------------------------
+  loki:
+    image: grafana/loki:3.0.0
+    command: -config.file=/etc/loki/loki-config.yml
+    volumes:
+      - ./loki/loki-config.yml:/etc/loki/loki-config.yml:ro
+      - loki_data:/loki
+    ports:
+      - "${LOKI_PORT:-3100}:3100"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3100/ready || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+    restart: unless-stopped
+
+  # --------------------------------------------------------------------------
+  # Promtail -- Log collector (ships Docker container logs to Loki)
+  # --------------------------------------------------------------------------
+  promtail:
+    image: grafana/promtail:3.0.0
+    command: -config.file=/etc/promtail/promtail-config.yml
+    volumes:
+      - ./promtail/promtail-config.yml:/etc/promtail/promtail-config.yml:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    depends_on:
+      loki:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # --------------------------------------------------------------------------
+  # Grafana -- Dashboards & visualization
+  # --------------------------------------------------------------------------
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "${GRAFANA_PORT:-3000}:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+    environment:
+      GF_SECURITY_ADMIN_USER: "${GRAFANA_USER:-admin}"
+      GF_SECURITY_ADMIN_PASSWORD: "${GRAFANA_PASSWORD:-admin}"
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    depends_on:
+      prometheus:
+        condition: service_healthy
+      loki:
+        condition: service_healthy
+      tempo:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/api/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped

@@ -1,0 +1,58 @@
+server:
+  http_listen_port: 9080
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+
+scrape_configs:
+  - job_name: docker
+    docker_sd_configs:
+      - host: unix:///var/run/docker.sock
+        refresh_interval: 5s
+    relabel_configs:
+      # Keep only containers from our compose project
+      - source_labels: ["__meta_docker_container_name"]
+        regex: ".*"
+        action: keep
+      # Use container name as label
+      - source_labels: ["__meta_docker_container_name"]
+        regex: "/?(.*)"
+        target_label: container
+      # Add compose service name
+      - source_labels: ["__meta_docker_container_label_com_docker_compose_service"]
+        target_label: service
+      # Add compose project name
+      - source_labels: ["__meta_docker_container_label_com_docker_compose_project"]
+        target_label: project
+    pipeline_stages:
+      # Try to parse JSON logs (from our JSONFormatter)
+      - json:
+          expressions:
+            level: level
+            logger_name: logger
+            correlation_id: correlation_id
+            event: "extra.prompt_data.event"
+      # Set log level from parsed JSON
+      - labels:
+          level:
+          logger_name:
+          event:
+      # Drop empty labels
+      - labeldrop:
+          - event
+          - logger_name
+          - level
+      # Re-add only if non-empty
+      - match:
+          selector: '{service=~".+"}'
+          stages:
+            - json:
+                expressions:
+                  level: level
+                  logger_name: logger
+            - labels:
+                level:
+                logger_name:

@@ -1,0 +1,190 @@
+# ==============================================================================
+# ia-agent-fwk -- Production Docker Compose
+# ==============================================================================
+# Full production stack: API + Workers + PostgreSQL + Redis + Qdrant
+#
+#   docker compose -f docker/docker-compose.prod.yml up -d
+#   docker compose -f docker/docker-compose.prod.yml down
+#
+# Profiles:
+#   --profile self-hosted   Include Ollama for local LLM inference
+#   --profile monitoring    Include Flower for Celery monitoring
+# ==============================================================================
+
+volumes:
+  pgdata:
+  redisdata:
+  qdrantdata:
+  ollama_data:
+
+services:
+  # --------------------------------------------------------------------------
+  # PostgreSQL 16 + pgvector
+  # --------------------------------------------------------------------------
+  postgres:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD required}
+      POSTGRES_DB: ${POSTGRES_DB:-ia_agent_fwk}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+
+  # --------------------------------------------------------------------------
+  # Redis 7 (with persistence)
+  # --------------------------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    command: redis-server --appendonly yes
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    restart: unless-stopped
+
+  # --------------------------------------------------------------------------
+  # Qdrant vector database
+  # --------------------------------------------------------------------------
+  qdrant:
+    image: qdrant/qdrant:v1.12.6
+    volumes:
+      - qdrantdata:/qdrant/storage
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c ':> /dev/tcp/localhost/6333' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    restart: unless-stopped
+
+  # --------------------------------------------------------------------------
+  # API Server
+  # --------------------------------------------------------------------------
+  api:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    command: ["api"]
+    ports:
+      - "${API_PORT:-8000}:8000"
+    environment:
+      IAFWK_DATABASE__URL: "postgresql+asyncpg://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-ia_agent_fwk}"
+      IAFWK_REDIS__URL: "redis://redis:6379/0"
+      IAFWK_EXECUTION__CELERY__BROKER_URL: "redis://redis:6379/0"
+      IAFWK_EXECUTION__CELERY__RESULT_BACKEND: "redis://redis:6379/0"
+      IAFWK_LLM__PROVIDERS__OPENAI__API_KEY: "${OPENAI_API_KEY:-}"
+      IAFWK_LLM__PROVIDERS__ANTHROPIC__API_KEY: "${ANTHROPIC_API_KEY:-}"
+      IAFWK_API_KEYS: "${IAFWK_API_KEYS:-}"
+      UVICORN_WORKERS: "${UVICORN_WORKERS:-4}"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+
+  # --------------------------------------------------------------------------
+  # Celery Worker
+  # --------------------------------------------------------------------------
+  worker:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    command: ["worker"]
+    environment:
+      IAFWK_DATABASE__URL: "postgresql+asyncpg://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-ia_agent_fwk}"
+      IAFWK_REDIS__URL: "redis://redis:6379/0"
+      IAFWK_EXECUTION__CELERY__BROKER_URL: "redis://redis:6379/0"
+      IAFWK_EXECUTION__CELERY__RESULT_BACKEND: "redis://redis:6379/0"
+      IAFWK_LLM__PROVIDERS__OPENAI__API_KEY: "${OPENAI_API_KEY:-}"
+      IAFWK_LLM__PROVIDERS__ANTHROPIC__API_KEY: "${ANTHROPIC_API_KEY:-}"
+      CELERY_CONCURRENCY: "${CELERY_CONCURRENCY:-4}"
+      LOG_LEVEL: "${LOG_LEVEL:-info}"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    deploy:
+      replicas: ${WORKER_REPLICAS:-1}
+    stop_grace_period: 300s
+    restart: unless-stopped
+
+  # --------------------------------------------------------------------------
+  # Celery Beat Scheduler
+  # --------------------------------------------------------------------------
+  beat:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    command: ["beat"]
+    environment:
+      IAFWK_EXECUTION__CELERY__BROKER_URL: "redis://redis:6379/0"
+      IAFWK_EXECUTION__CELERY__RESULT_BACKEND: "redis://redis:6379/0"
+      LOG_LEVEL: "${LOG_LEVEL:-info}"
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # --------------------------------------------------------------------------
+  # Ollama (self-hosted LLM) -- profile: self-hosted
+  # --------------------------------------------------------------------------
+  ollama:
+    image: ollama/ollama:latest
+    profiles:
+      - self-hosted
+    volumes:
+      - ollama_data:/root/.ollama
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:11434/ || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    restart: unless-stopped
+
+  # --------------------------------------------------------------------------
+  # Flower (Celery monitoring UI) -- profile: monitoring
+  # --------------------------------------------------------------------------
+  flower:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    profiles:
+      - monitoring
+    command: >
+      celery -A ia_agent_fwk.execution.celery_app flower
+      --port=5555
+    ports:
+      - "${FLOWER_PORT:-5555}:5555"
+    environment:
+      IAFWK_EXECUTION__CELERY__BROKER_URL: "redis://redis:6379/0"
+      IAFWK_EXECUTION__CELERY__RESULT_BACKEND: "redis://redis:6379/0"
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5555/ || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 15s
+    restart: unless-stopped
