@@ -1,0 +1,66 @@
+# ==============================================================================
+# ia-agent-fwk -- Continuous Integration
+# ==============================================================================
+# Runs lint (ruff), type checking (mypy), and unit tests (pytest) on every
+# push and pull request to main and develop branches.
+# ==============================================================================
+
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+permissions:
+  contents: read
+
+env:
+  IAFWK_APP__ENVIRONMENT: testing
+
+jobs:
+  ci:
+    name: Lint, Type Check & Test
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: ["3.11"]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('pyproject.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: pip install -e ".[dev]"
+
+      - name: Lint with ruff
+        run: ruff check src/ tests/
+
+      - name: Check formatting with ruff
+        run: ruff format --check src/ tests/
+
+      - name: Type check with mypy
+        run: mypy src/
+
+      - name: Run tests with coverage
+        run: |
+          pytest tests/unit/ \
+            --cov=src/ia_agent_fwk \
+            --cov-report=term-missing \
+            --cov-fail-under=80 \
+            -v
