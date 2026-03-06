@@ -1,0 +1,1972 @@
+{
+  "dashboard": {
+    "uid": "ia-agent-fwk-security",
+    "title": "IA Agent FWK - Security Hardening",
+    "tags": [
+      "ia-agent-fwk",
+      "security",
+      "rate-limiting",
+      "audit",
+      "sanitization"
+    ],
+    "timezone": "browser",
+    "schemaVersion": 39,
+    "version": 1,
+    "refresh": "30s",
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    },
+    "panels": [
+      {
+        "id": 1,
+        "type": "row",
+        "title": "Security Overview",
+        "collapsed": true,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 0
+        },
+        "panels": [
+          {
+            "id": 2,
+            "type": "stat",
+            "title": "Auth Success",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(api_auth_total{result=\"success\"})",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 4,
+              "x": 0,
+              "y": 1
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 3,
+            "type": "stat",
+            "title": "Auth Failures",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(api_auth_total{result=\"failure\"})",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 4,
+              "x": 4,
+              "y": 1
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "yellow",
+                      "value": 1
+                    },
+                    {
+                      "color": "red",
+                      "value": 10
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 4,
+            "type": "stat",
+            "title": "Rate Limit Hits",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(api_rate_limit_exceeded_total)",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 4,
+              "x": 8,
+              "y": 1
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "orange",
+                      "value": 1
+                    },
+                    {
+                      "color": "red",
+                      "value": 50
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 5,
+            "type": "stat",
+            "title": "Audit Events",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(audit_events_total)",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 4,
+              "x": 12,
+              "y": 1
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "blue",
+                      "value": null
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 6,
+            "type": "stat",
+            "title": "Sanitization Ops",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(sanitization_operations_total)",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 4,
+              "x": 16,
+              "y": 1
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "purple",
+                      "value": null
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 7,
+            "type": "stat",
+            "title": "Sensitive Detections",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(sanitization_detections_total)",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 4,
+              "x": 20,
+              "y": 1
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "yellow",
+                      "value": 1
+                    },
+                    {
+                      "color": "red",
+                      "value": 10
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 8,
+            "type": "gauge",
+            "title": "Authentication Success Rate",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(api_auth_total{result=\"success\"}) / sum(api_auth_total)",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 6,
+              "w": 6,
+              "x": 0,
+              "y": 5
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              }
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "percentunit",
+                "min": 0,
+                "max": 1,
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "yellow",
+                      "value": 0.7
+                    },
+                    {
+                      "color": "red",
+                      "value": 0.9
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 9,
+            "type": "timeseries",
+            "title": "Authentication Rate (per minute)",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(api_auth_total{result=\"success\"}[1m]))*60",
+                "legendFormat": "Success"
+              },
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(api_auth_total{result=\"failure\"}[1m]))*60",
+                "legendFormat": "Failure"
+              }
+            ],
+            "gridPos": {
+              "h": 6,
+              "w": 10,
+              "x": 6,
+              "y": 5
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "reqps",
+                "custom": {
+                  "drawStyle": "line",
+                  "fillOpacity": 30,
+                  "lineWidth": 2,
+                  "stacking": {
+                    "mode": "normal"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "id": 10,
+            "type": "piechart",
+            "title": "Security Events by Type",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(audit_events_total) by (event_type)",
+                "legendFormat": "{{event_type}}"
+              }
+            ],
+            "gridPos": {
+              "h": 6,
+              "w": 8,
+              "x": 16,
+              "y": 5
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "legend": {
+                "displayMode": "table",
+                "placement": "right"
+              },
+              "pieType": "donut"
+            }
+          }
+        ]
+      },
+      {
+        "id": 11,
+        "type": "row",
+        "title": "Rate Limiting",
+        "collapsed": true,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 11
+        },
+        "panels": [
+          {
+            "id": 12,
+            "type": "timeseries",
+            "title": "Rate Limit Checks (Allowed vs Denied)",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(rate_limit_checks_total{status=\"allowed\"}[1m]))*60",
+                "legendFormat": "Allowed"
+              },
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(rate_limit_checks_total{status=\"denied\"}[1m]))*60",
+                "legendFormat": "Denied"
+              }
+            ],
+            "gridPos": {
+              "h": 8,
+              "w": 8,
+              "x": 0,
+              "y": 12
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "reqps",
+                "custom": {
+                  "drawStyle": "line",
+                  "fillOpacity": 30,
+                  "lineWidth": 2,
+                  "stacking": {
+                    "mode": "normal"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "id": 13,
+            "type": "timeseries",
+            "title": "Rate Limit Exceeded Over Time",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(api_rate_limit_exceeded_total[1m]))*60",
+                "legendFormat": "Exceeded"
+              }
+            ],
+            "gridPos": {
+              "h": 8,
+              "w": 8,
+              "x": 8,
+              "y": 12
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "reqps",
+                "custom": {
+                  "drawStyle": "line",
+                  "fillOpacity": 10,
+                  "lineWidth": 2
+                }
+              }
+            }
+          },
+          {
+            "id": 14,
+            "type": "gauge",
+            "title": "Window Usage Ratio (avg)",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "rate(rate_limit_window_usage_ratio_sum[5m]) / rate(rate_limit_window_usage_ratio_count[5m])",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 8,
+              "w": 8,
+              "x": 16,
+              "y": 12
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              }
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "percentunit",
+                "min": 0,
+                "max": 1,
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "yellow",
+                      "value": 0.7
+                    },
+                    {
+                      "color": "red",
+                      "value": 0.9
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 15,
+            "type": "stat",
+            "title": "Total Checks Allowed",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate_limit_checks_total{status=\"allowed\"})",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 6,
+              "x": 0,
+              "y": 20
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 16,
+            "type": "stat",
+            "title": "Total Checks Denied",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate_limit_checks_total{status=\"denied\"})",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 6,
+              "x": 6,
+              "y": 20
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "orange",
+                      "value": 1
+                    },
+                    {
+                      "color": "red",
+                      "value": 10
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 17,
+            "type": "stat",
+            "title": "API Rate Limit Allowed",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(api_rate_limit_allowed_total)",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 6,
+              "x": 12,
+              "y": 20
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 18,
+            "type": "stat",
+            "title": "API Rate Limit Exceeded",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(api_rate_limit_exceeded_total)",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 6,
+              "x": 18,
+              "y": 20
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "orange",
+                      "value": 1
+                    },
+                    {
+                      "color": "red",
+                      "value": 50
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 19,
+            "type": "bargauge",
+            "title": "Auth Failures by Reason",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(api_auth_total{result=\"failure\"}) by (reason)",
+                "legendFormat": "{{reason}}"
+              }
+            ],
+            "gridPos": {
+              "h": 6,
+              "w": 12,
+              "x": 0,
+              "y": 24
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "displayMode": "gradient",
+              "orientation": "horizontal"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short"
+              }
+            }
+          },
+          {
+            "id": 20,
+            "type": "timeseries",
+            "title": "Rate Limit Denial Rate (%)",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(rate_limit_checks_total{status=\"denied\"}[5m])) / sum(rate(rate_limit_checks_total[5m])) * 100",
+                "legendFormat": "Denial %"
+              }
+            ],
+            "gridPos": {
+              "h": 6,
+              "w": 12,
+              "x": 12,
+              "y": 24
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "percent",
+                "custom": {
+                  "drawStyle": "line",
+                  "fillOpacity": 10,
+                  "lineWidth": 2
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 21,
+        "type": "row",
+        "title": "Audit Logging",
+        "collapsed": true,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 30
+        },
+        "panels": [
+          {
+            "id": 22,
+            "type": "timeseries",
+            "title": "Audit Events Rate by Type (per minute)",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(audit_events_total{event_type=\"auth_success\"}[1m]))*60",
+                "legendFormat": "Auth Success"
+              },
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(audit_events_total{event_type=\"auth_failure\"}[1m]))*60",
+                "legendFormat": "Auth Failure"
+              },
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(audit_events_total{event_type=\"agent_execution\"}[1m]))*60",
+                "legendFormat": "Agent Exec"
+              },
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(audit_events_total{event_type=\"tool_execution\"}[1m]))*60",
+                "legendFormat": "Tool Exec"
+              },
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(audit_events_total{event_type=\"rate_limit_hit\"}[1m]))*60",
+                "legendFormat": "Rate Limit"
+              },
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(audit_events_total{event_type=\"config_change\"}[1m]))*60",
+                "legendFormat": "Config Change"
+              }
+            ],
+            "gridPos": {
+              "h": 8,
+              "w": 12,
+              "x": 0,
+              "y": 31
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "custom": {
+                  "drawStyle": "line",
+                  "fillOpacity": 30,
+                  "lineWidth": 2,
+                  "stacking": {
+                    "mode": "normal"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "id": 23,
+            "type": "piechart",
+            "title": "Audit Events Distribution",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(audit_events_total) by (event_type)",
+                "legendFormat": "{{event_type}}"
+              }
+            ],
+            "gridPos": {
+              "h": 8,
+              "w": 6,
+              "x": 12,
+              "y": 31
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "legend": {
+                "displayMode": "table",
+                "placement": "right"
+              },
+              "pieType": "donut"
+            }
+          },
+          {
+            "id": 24,
+            "type": "piechart",
+            "title": "Audit Events by Result",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(audit_events_total) by (result)",
+                "legendFormat": "{{result}}"
+              }
+            ],
+            "gridPos": {
+              "h": 8,
+              "w": 6,
+              "x": 18,
+              "y": 31
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "legend": {
+                "displayMode": "table",
+                "placement": "right"
+              },
+              "pieType": "donut"
+            }
+          },
+          {
+            "id": 25,
+            "type": "stat",
+            "title": "Auth Success Events",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(audit_events_total{event_type=\"auth_success\"})",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 4,
+              "x": 0,
+              "y": 39
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 26,
+            "type": "stat",
+            "title": "Auth Failure Events",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(audit_events_total{event_type=\"auth_failure\"})",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 4,
+              "x": 4,
+              "y": 39
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "red",
+                      "value": null
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 27,
+            "type": "stat",
+            "title": "Agent Execution Events",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(audit_events_total{event_type=\"agent_execution\"})",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 4,
+              "x": 8,
+              "y": 39
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "blue",
+                      "value": null
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 28,
+            "type": "stat",
+            "title": "Tool Execution Events",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(audit_events_total{event_type=\"tool_execution\"})",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 4,
+              "x": 12,
+              "y": 39
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "purple",
+                      "value": null
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 29,
+            "type": "stat",
+            "title": "Rate Limit Hit Events",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(audit_events_total{event_type=\"rate_limit_hit\"})",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 4,
+              "x": 16,
+              "y": 39
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "orange",
+                      "value": null
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 30,
+            "type": "stat",
+            "title": "Config Change Events",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(audit_events_total{event_type=\"config_change\"})",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 4,
+              "x": 20,
+              "y": 39
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "yellow",
+                      "value": null
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 31,
+        "type": "row",
+        "title": "Input Sanitization",
+        "collapsed": true,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 43
+        },
+        "panels": [
+          {
+            "id": 32,
+            "type": "timeseries",
+            "title": "Sanitization Operations Rate (per minute)",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(sanitization_operations_total{operation=\"log_value\"}[1m]))*60",
+                "legendFormat": "Log Value"
+              },
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(sanitization_operations_total{operation=\"mask_secret\"}[1m]))*60",
+                "legendFormat": "Mask Secret"
+              },
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(sanitization_operations_total{operation=\"error_message\"}[1m]))*60",
+                "legendFormat": "Error Message"
+              }
+            ],
+            "gridPos": {
+              "h": 8,
+              "w": 8,
+              "x": 0,
+              "y": 44
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "custom": {
+                  "drawStyle": "line",
+                  "fillOpacity": 30,
+                  "lineWidth": 2,
+                  "stacking": {
+                    "mode": "normal"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "id": 33,
+            "type": "timeseries",
+            "title": "Sanitization Detections Rate (per minute)",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(sanitization_detections_total{type=\"control_chars\"}[1m]))*60",
+                "legendFormat": "Control Chars"
+              },
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(sanitization_detections_total{type=\"truncation\"}[1m]))*60",
+                "legendFormat": "Truncation"
+              },
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(sanitization_detections_total{type=\"sensitive_error\"}[1m]))*60",
+                "legendFormat": "Sensitive Error"
+              }
+            ],
+            "gridPos": {
+              "h": 8,
+              "w": 8,
+              "x": 8,
+              "y": 44
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "custom": {
+                  "drawStyle": "line",
+                  "fillOpacity": 30,
+                  "lineWidth": 2,
+                  "stacking": {
+                    "mode": "normal"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "id": 34,
+            "type": "piechart",
+            "title": "Sanitization Operations Distribution",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(sanitization_operations_total) by (operation)",
+                "legendFormat": "{{operation}}"
+              }
+            ],
+            "gridPos": {
+              "h": 8,
+              "w": 8,
+              "x": 16,
+              "y": 44
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "legend": {
+                "displayMode": "table",
+                "placement": "right"
+              },
+              "pieType": "donut"
+            }
+          },
+          {
+            "id": 35,
+            "type": "stat",
+            "title": "Log Value Ops",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(sanitization_operations_total{operation=\"log_value\"})",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 4,
+              "x": 0,
+              "y": 52
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "blue",
+                      "value": null
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 36,
+            "type": "stat",
+            "title": "Mask Secret Ops",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(sanitization_operations_total{operation=\"mask_secret\"})",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 4,
+              "x": 4,
+              "y": 52
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "purple",
+                      "value": null
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 37,
+            "type": "stat",
+            "title": "Error Message Ops",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(sanitization_operations_total{operation=\"error_message\"})",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 4,
+              "x": 8,
+              "y": 52
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "orange",
+                      "value": null
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 38,
+            "type": "stat",
+            "title": "Control Chars Detected",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(sanitization_detections_total{type=\"control_chars\"})",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 4,
+              "x": 12,
+              "y": 52
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "yellow",
+                      "value": 1
+                    },
+                    {
+                      "color": "red",
+                      "value": 10
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 39,
+            "type": "stat",
+            "title": "Truncations",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(sanitization_detections_total{type=\"truncation\"})",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 4,
+              "x": 16,
+              "y": 52
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "orange",
+                      "value": null
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 40,
+            "type": "stat",
+            "title": "Sensitive Errors Sanitized",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(sanitization_detections_total{type=\"sensitive_error\"})",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 4,
+              "x": 20,
+              "y": 52
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "yellow",
+                      "value": 1
+                    },
+                    {
+                      "color": "red",
+                      "value": 5
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 41,
+        "type": "row",
+        "title": "Security Logs",
+        "collapsed": true,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 56
+        },
+        "panels": [
+          {
+            "id": 42,
+            "type": "logs",
+            "title": "Audit Event Logs",
+            "datasource": {
+              "type": "loki",
+              "uid": "loki-datasource"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "loki",
+                  "uid": "loki-datasource"
+                },
+                "expr": "{job=\"ia-agent-fwk\"} |= \"audit_event\"",
+                "queryType": "range"
+              }
+            ],
+            "gridPos": {
+              "h": 8,
+              "w": 24,
+              "x": 0,
+              "y": 57
+            },
+            "options": {
+              "showTime": true,
+              "sortOrder": "Descending",
+              "enableLogDetails": true,
+              "wrapLogMessage": true
+            }
+          },
+          {
+            "id": 43,
+            "type": "logs",
+            "title": "Rate Limit Logs",
+            "datasource": {
+              "type": "loki",
+              "uid": "loki-datasource"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "loki",
+                  "uid": "loki-datasource"
+                },
+                "expr": "{job=\"ia-agent-fwk\"} |= \"rate_limit\"",
+                "queryType": "range"
+              }
+            ],
+            "gridPos": {
+              "h": 8,
+              "w": 12,
+              "x": 0,
+              "y": 65
+            },
+            "options": {
+              "showTime": true,
+              "sortOrder": "Descending",
+              "enableLogDetails": true,
+              "wrapLogMessage": true
+            }
+          },
+          {
+            "id": 44,
+            "type": "logs",
+            "title": "Sanitization / Security Logs",
+            "datasource": {
+              "type": "loki",
+              "uid": "loki-datasource"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "loki",
+                  "uid": "loki-datasource"
+                },
+                "expr": "{job=\"ia-agent-fwk\"} |= \"security_data\"",
+                "queryType": "range"
+              }
+            ],
+            "gridPos": {
+              "h": 8,
+              "w": 12,
+              "x": 12,
+              "y": 65
+            },
+            "options": {
+              "showTime": true,
+              "sortOrder": "Descending",
+              "enableLogDetails": true,
+              "wrapLogMessage": true
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "overwrite": true
+}

@@ -1,0 +1,2061 @@
+{
+  "dashboard": {
+    "uid": "ia-agent-fwk-streaming",
+    "title": "IA Agent FWK - Streaming",
+    "tags": [
+      "ia-agent-fwk",
+      "streaming",
+      "sse",
+      "websocket"
+    ],
+    "timezone": "browser",
+    "schemaVersion": 39,
+    "version": 1,
+    "refresh": "30s",
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    },
+    "panels": [
+      {
+        "id": 1,
+        "type": "row",
+        "title": "Streaming Overview",
+        "collapsed": true,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 0
+        },
+        "panels": [
+          {
+            "id": 2,
+            "type": "stat",
+            "title": "SSE Streams",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(sse_streams_total)",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 4,
+              "x": 0,
+              "y": 1
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "blue",
+                      "value": null
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 3,
+            "type": "stat",
+            "title": "SSE Completed",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(sse_streams_completed_total{status=\"success\"})",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 4,
+              "x": 4,
+              "y": 1
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 4,
+            "type": "stat",
+            "title": "SSE Errors",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(sse_streams_completed_total{status=\"error\"})",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 4,
+              "x": 8,
+              "y": 1
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "red",
+                      "value": 1
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 5,
+            "type": "stat",
+            "title": "WS Connections",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(ws_connections_total)",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 4,
+              "x": 12,
+              "y": 1
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "blue",
+                      "value": null
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 6,
+            "type": "stat",
+            "title": "WS Agent Runs",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(ws_agent_executions_total)",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 4,
+              "x": 16,
+              "y": 1
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "purple",
+                      "value": null
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 7,
+            "type": "stat",
+            "title": "Client Disconnects",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(streaming_client_disconnects_total)",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 4,
+              "x": 20,
+              "y": 1
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "orange",
+                      "value": 1
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 8,
+            "type": "timeseries",
+            "title": "Streaming API Requests (per minute)",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(streaming_api_requests_total{transport=\"sse\"}[1m]))*60",
+                "legendFormat": "SSE"
+              },
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(streaming_api_requests_total{transport=\"websocket\"}[1m]))*60",
+                "legendFormat": "WebSocket"
+              }
+            ],
+            "gridPos": {
+              "h": 8,
+              "w": 8,
+              "x": 0,
+              "y": 5
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "reqps",
+                "custom": {
+                  "drawStyle": "line",
+                  "fillOpacity": 30,
+                  "lineWidth": 2,
+                  "stacking": {
+                    "mode": "normal"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "id": 9,
+            "type": "timeseries",
+            "title": "Stream Events by Type (per minute)",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(streaming_events_total{event=\"start\"}[1m]))*60",
+                "legendFormat": "Start"
+              },
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(streaming_events_total{event=\"heartbeat\"}[1m]))*60",
+                "legendFormat": "Heartbeat"
+              },
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(streaming_events_total{event=\"complete\"}[1m]))*60",
+                "legendFormat": "Complete"
+              },
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(streaming_events_total{event=\"error\"}[1m]))*60",
+                "legendFormat": "Error"
+              }
+            ],
+            "gridPos": {
+              "h": 8,
+              "w": 8,
+              "x": 8,
+              "y": 5
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "custom": {
+                  "drawStyle": "line",
+                  "fillOpacity": 30,
+                  "lineWidth": 2,
+                  "stacking": {
+                    "mode": "normal"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "id": 10,
+            "type": "piechart",
+            "title": "Events Distribution",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(streaming_events_total) by (event)",
+                "legendFormat": "{{event}}"
+              }
+            ],
+            "gridPos": {
+              "h": 8,
+              "w": 8,
+              "x": 16,
+              "y": 5
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "legend": {
+                "displayMode": "table",
+                "placement": "right"
+              },
+              "pieType": "donut"
+            }
+          }
+        ]
+      },
+      {
+        "id": 11,
+        "type": "row",
+        "title": "SSE Endpoint Streaming",
+        "collapsed": true,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 13
+        },
+        "panels": [
+          {
+            "id": 12,
+            "type": "timeseries",
+            "title": "SSE Streams Rate by Agent (per minute)",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(sse_streams_total[1m])) by (agent_type) * 60",
+                "legendFormat": "{{agent_type}}"
+              }
+            ],
+            "gridPos": {
+              "h": 8,
+              "w": 8,
+              "x": 0,
+              "y": 14
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "reqps",
+                "custom": {
+                  "drawStyle": "line",
+                  "fillOpacity": 10,
+                  "lineWidth": 2
+                }
+              }
+            }
+          },
+          {
+            "id": 13,
+            "type": "timeseries",
+            "title": "SSE Stream Duration",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "rate(sse_stream_duration_seconds_sum[5m]) / rate(sse_stream_duration_seconds_count[5m])",
+                "legendFormat": "Avg Duration"
+              }
+            ],
+            "gridPos": {
+              "h": 8,
+              "w": 8,
+              "x": 8,
+              "y": 14
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "s",
+                "custom": {
+                  "drawStyle": "line",
+                  "fillOpacity": 10,
+                  "lineWidth": 2
+                }
+              }
+            }
+          },
+          {
+            "id": 14,
+            "type": "timeseries",
+            "title": "SSE Completion Status (per minute)",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(sse_streams_completed_total{status=\"success\"}[1m]))*60",
+                "legendFormat": "Success"
+              },
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(sse_streams_completed_total{status=\"error\"}[1m]))*60",
+                "legendFormat": "Error"
+              },
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(sse_streams_completed_total{status=\"cancelled\"}[1m]))*60",
+                "legendFormat": "Cancelled"
+              }
+            ],
+            "gridPos": {
+              "h": 8,
+              "w": 8,
+              "x": 16,
+              "y": 14
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "custom": {
+                  "drawStyle": "line",
+                  "fillOpacity": 30,
+                  "lineWidth": 2,
+                  "stacking": {
+                    "mode": "normal"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "id": 15,
+            "type": "stat",
+            "title": "Avg Heartbeats/Stream",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "rate(sse_heartbeats_per_stream_sum[5m]) / rate(sse_heartbeats_per_stream_count[5m])",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 6,
+              "x": 0,
+              "y": 22
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "blue",
+                      "value": null
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 16,
+            "type": "stat",
+            "title": "SSE Cancelled",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(sse_streams_completed_total{status=\"cancelled\"})",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 6,
+              "x": 6,
+              "y": 22
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "orange",
+                      "value": 1
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 17,
+            "type": "bargauge",
+            "title": "SSE Streams by Agent Type",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(sse_streams_total) by (agent_type)",
+                "legendFormat": "{{agent_type}}"
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 12,
+              "x": 12,
+              "y": 22
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "displayMode": "gradient",
+              "orientation": "horizontal"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 18,
+        "type": "row",
+        "title": "WebSocket Bidirectional Communication",
+        "collapsed": true,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 26
+        },
+        "panels": [
+          {
+            "id": 19,
+            "type": "timeseries",
+            "title": "WS Connections Rate (per minute)",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(ws_connections_total[1m]))*60",
+                "legendFormat": "New Connections"
+              },
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(ws_connections_rejected_total[1m]))*60",
+                "legendFormat": "Rejected"
+              }
+            ],
+            "gridPos": {
+              "h": 8,
+              "w": 8,
+              "x": 0,
+              "y": 27
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "reqps",
+                "custom": {
+                  "drawStyle": "line",
+                  "fillOpacity": 10,
+                  "lineWidth": 2
+                }
+              }
+            }
+          },
+          {
+            "id": 20,
+            "type": "timeseries",
+            "title": "WS Agent Execution Duration",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "rate(ws_agent_execution_duration_seconds_sum[5m]) / rate(ws_agent_execution_duration_seconds_count[5m])",
+                "legendFormat": "Avg Duration"
+              }
+            ],
+            "gridPos": {
+              "h": 8,
+              "w": 8,
+              "x": 8,
+              "y": 27
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "s",
+                "custom": {
+                  "drawStyle": "line",
+                  "fillOpacity": 10,
+                  "lineWidth": 2
+                }
+              }
+            }
+          },
+          {
+            "id": 21,
+            "type": "timeseries",
+            "title": "WS Agent Completion Status (per minute)",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(ws_agent_executions_completed_total{status=\"success\"}[1m]))*60",
+                "legendFormat": "Success"
+              },
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(ws_agent_executions_completed_total{status=\"error\"}[1m]))*60",
+                "legendFormat": "Error"
+              }
+            ],
+            "gridPos": {
+              "h": 8,
+              "w": 8,
+              "x": 16,
+              "y": 27
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "custom": {
+                  "drawStyle": "line",
+                  "fillOpacity": 30,
+                  "lineWidth": 2,
+                  "stacking": {
+                    "mode": "normal"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "id": 22,
+            "type": "stat",
+            "title": "WS Auth Success",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(ws_auth_total{status=\"success\"})",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 4,
+              "x": 0,
+              "y": 35
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 23,
+            "type": "stat",
+            "title": "WS Auth Failures",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(ws_auth_total{status=\"failure\"})",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 4,
+              "x": 4,
+              "y": 35
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "red",
+                      "value": 1
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 24,
+            "type": "stat",
+            "title": "WS Messages Received",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(ws_messages_received_total)",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 4,
+              "x": 8,
+              "y": 35
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "blue",
+                      "value": null
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 25,
+            "type": "stat",
+            "title": "WS Invalid Messages",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(ws_invalid_messages_total)",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 4,
+              "x": 12,
+              "y": 35
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "orange",
+                      "value": 1
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 26,
+            "type": "stat",
+            "title": "Avg Messages/Connection",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "rate(ws_messages_per_connection_sum[5m]) / rate(ws_messages_per_connection_count[5m])",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 4,
+              "x": 16,
+              "y": 35
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "purple",
+                      "value": null
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 27,
+            "type": "stat",
+            "title": "WS Errors",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(ws_errors_total)",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 4,
+              "x": 20,
+              "y": 35
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "red",
+                      "value": 1
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 28,
+        "type": "row",
+        "title": "Connection Health & Keep-alive",
+        "collapsed": true,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 39
+        },
+        "panels": [
+          {
+            "id": 29,
+            "type": "timeseries",
+            "title": "WS Active Connections",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "rate(ws_active_connections_sum[1m]) / rate(ws_active_connections_count[1m])",
+                "legendFormat": "Active Connections"
+              }
+            ],
+            "gridPos": {
+              "h": 8,
+              "w": 8,
+              "x": 0,
+              "y": 40
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "custom": {
+                  "drawStyle": "line",
+                  "fillOpacity": 10,
+                  "lineWidth": 2
+                }
+              }
+            }
+          },
+          {
+            "id": 30,
+            "type": "timeseries",
+            "title": "WS Ping Status (per minute)",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(ws_pings_total{status=\"success\"}[1m]))*60",
+                "legendFormat": "Success"
+              },
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(ws_pings_total{status=\"failure\"}[1m]))*60",
+                "legendFormat": "Failure (stale)"
+              }
+            ],
+            "gridPos": {
+              "h": 8,
+              "w": 8,
+              "x": 8,
+              "y": 40
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "custom": {
+                  "drawStyle": "line",
+                  "fillOpacity": 30,
+                  "lineWidth": 2,
+                  "stacking": {
+                    "mode": "normal"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "id": 31,
+            "type": "timeseries",
+            "title": "Client Disconnects (per minute)",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(streaming_client_disconnects_total{transport=\"sse\"}[1m]))*60",
+                "legendFormat": "SSE"
+              },
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(streaming_client_disconnects_total{transport=\"websocket\"}[1m]))*60",
+                "legendFormat": "WebSocket"
+              }
+            ],
+            "gridPos": {
+              "h": 8,
+              "w": 8,
+              "x": 16,
+              "y": 40
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "custom": {
+                  "drawStyle": "line",
+                  "fillOpacity": 30,
+                  "lineWidth": 2,
+                  "stacking": {
+                    "mode": "normal"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "id": 32,
+            "type": "stat",
+            "title": "WS Connection Duration (avg)",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "rate(ws_connection_duration_seconds_sum[5m]) / rate(ws_connection_duration_seconds_count[5m])",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 6,
+              "x": 0,
+              "y": 48
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "s",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "blue",
+                      "value": null
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 33,
+            "type": "stat",
+            "title": "WS Rejected (max conn)",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(ws_connections_rejected_total{reason=\"max_connections\"})",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 6,
+              "x": 6,
+              "y": 48
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "red",
+                      "value": 1
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 34,
+            "type": "stat",
+            "title": "Total Pings Sent",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(ws_pings_total)",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 6,
+              "x": 12,
+              "y": 48
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "blue",
+                      "value": null
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 35,
+            "type": "stat",
+            "title": "Failed Pings (stale)",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(ws_pings_total{status=\"failure\"})",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 6,
+              "x": 18,
+              "y": 48
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "orange",
+                      "value": 1
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 36,
+        "type": "row",
+        "title": "LLM Streaming Backpressure",
+        "collapsed": true,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 52
+        },
+        "panels": [
+          {
+            "id": 37,
+            "type": "timeseries",
+            "title": "LLM Stream Requests (per minute)",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(llm_stream_requests_total[1m])) by (provider) * 60",
+                "legendFormat": "{{provider}}"
+              }
+            ],
+            "gridPos": {
+              "h": 8,
+              "w": 8,
+              "x": 0,
+              "y": 53
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "reqps",
+                "custom": {
+                  "drawStyle": "line",
+                  "fillOpacity": 10,
+                  "lineWidth": 2
+                }
+              }
+            }
+          },
+          {
+            "id": 38,
+            "type": "timeseries",
+            "title": "LLM Stream Chunks (per minute)",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(llm_stream_chunks_yielded_total[1m]))*60",
+                "legendFormat": "Yielded"
+              },
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(llm_stream_chunks_dropped_total[1m]))*60",
+                "legendFormat": "Dropped"
+              }
+            ],
+            "gridPos": {
+              "h": 8,
+              "w": 8,
+              "x": 8,
+              "y": 53
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "custom": {
+                  "drawStyle": "line",
+                  "fillOpacity": 30,
+                  "lineWidth": 2,
+                  "stacking": {
+                    "mode": "normal"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "id": 39,
+            "type": "timeseries",
+            "title": "LLM Stream Duration by Provider",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "rate(llm_stream_duration_seconds_sum[5m]) / rate(llm_stream_duration_seconds_count[5m])",
+                "legendFormat": "Avg Duration"
+              }
+            ],
+            "gridPos": {
+              "h": 8,
+              "w": 8,
+              "x": 16,
+              "y": 53
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "s",
+                "custom": {
+                  "drawStyle": "line",
+                  "fillOpacity": 10,
+                  "lineWidth": 2
+                }
+              }
+            }
+          },
+          {
+            "id": 40,
+            "type": "stat",
+            "title": "LLM Stream Requests",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(llm_stream_requests_total)",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 6,
+              "x": 0,
+              "y": 61
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "blue",
+                      "value": null
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 41,
+            "type": "stat",
+            "title": "LLM Stream Errors",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(llm_stream_errors_total)",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 4,
+              "x": 6,
+              "y": 61
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "red",
+                      "value": 1
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 42,
+            "type": "stat",
+            "title": "Chunks Yielded",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(llm_stream_chunks_yielded_total)",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 4,
+              "x": 10,
+              "y": 61
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 43,
+            "type": "stat",
+            "title": "Chunks Dropped",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(llm_stream_chunks_dropped_total)",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 5,
+              "x": 14,
+              "y": 61
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "orange",
+                      "value": 1
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 44,
+            "type": "piechart",
+            "title": "Streams by Provider",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(llm_stream_requests_total) by (provider)",
+                "legendFormat": "{{provider}}"
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 5,
+              "x": 19,
+              "y": 61
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "legend": {
+                "displayMode": "table",
+                "placement": "right"
+              },
+              "pieType": "donut"
+            }
+          }
+        ]
+      },
+      {
+        "id": 45,
+        "type": "row",
+        "title": "Streaming Logs",
+        "collapsed": true,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 65
+        },
+        "panels": [
+          {
+            "id": 46,
+            "type": "logs",
+            "title": "SSE Stream Logs",
+            "datasource": {
+              "type": "loki",
+              "uid": "loki-datasource"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "loki",
+                  "uid": "loki-datasource"
+                },
+                "expr": "{job=\"ia-agent-fwk\"} |= \"streaming_data\" |= \"sse\"",
+                "queryType": "range"
+              }
+            ],
+            "gridPos": {
+              "h": 8,
+              "w": 12,
+              "x": 0,
+              "y": 66
+            },
+            "options": {
+              "showTime": true,
+              "sortOrder": "Descending",
+              "enableLogDetails": true,
+              "wrapLogMessage": true
+            }
+          },
+          {
+            "id": 47,
+            "type": "logs",
+            "title": "WebSocket Logs",
+            "datasource": {
+              "type": "loki",
+              "uid": "loki-datasource"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "loki",
+                  "uid": "loki-datasource"
+                },
+                "expr": "{job=\"ia-agent-fwk\"} |= \"streaming_data\" |= \"ws_\"",
+                "queryType": "range"
+              }
+            ],
+            "gridPos": {
+              "h": 8,
+              "w": 12,
+              "x": 12,
+              "y": 66
+            },
+            "options": {
+              "showTime": true,
+              "sortOrder": "Descending",
+              "enableLogDetails": true,
+              "wrapLogMessage": true
+            }
+          },
+          {
+            "id": 48,
+            "type": "logs",
+            "title": "LLM Stream Logs",
+            "datasource": {
+              "type": "loki",
+              "uid": "loki-datasource"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "loki",
+                  "uid": "loki-datasource"
+                },
+                "expr": "{job=\"ia-agent-fwk\"} |= \"llm_data\" |= \"stream\"",
+                "queryType": "range"
+              }
+            ],
+            "gridPos": {
+              "h": 8,
+              "w": 12,
+              "x": 0,
+              "y": 74
+            },
+            "options": {
+              "showTime": true,
+              "sortOrder": "Descending",
+              "enableLogDetails": true,
+              "wrapLogMessage": true
+            }
+          },
+          {
+            "id": 49,
+            "type": "logs",
+            "title": "Client Disconnect & Error Logs",
+            "datasource": {
+              "type": "loki",
+              "uid": "loki-datasource"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "loki",
+                  "uid": "loki-datasource"
+                },
+                "expr": "{job=\"ia-agent-fwk\"} |~ \"disconnect|cancelled|ping failed\"",
+                "queryType": "range"
+              }
+            ],
+            "gridPos": {
+              "h": 8,
+              "w": 12,
+              "x": 12,
+              "y": 74
+            },
+            "options": {
+              "showTime": true,
+              "sortOrder": "Descending",
+              "enableLogDetails": true,
+              "wrapLogMessage": true
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "overwrite": true
+}

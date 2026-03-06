@@ -1,0 +1,1637 @@
+{
+  "dashboard": {
+    "uid": "ia-agent-fwk-tools",
+    "title": "IA Agent FWK - Tools System",
+    "tags": [
+      "ia-agent-fwk",
+      "tools",
+      "registry",
+      "execution",
+      "permissions"
+    ],
+    "timezone": "browser",
+    "schemaVersion": 39,
+    "version": 1,
+    "refresh": "30s",
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    },
+    "panels": [
+      {
+        "id": 1,
+        "type": "row",
+        "title": "Tools Overview",
+        "collapsed": true,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 0
+        },
+        "panels": [
+          {
+            "id": 2,
+            "type": "stat",
+            "title": "Total Executions",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(tool_executions_total)",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 4,
+              "x": 0,
+              "y": 1
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "blue",
+                      "value": null
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 3,
+            "type": "stat",
+            "title": "Successful",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(tool_executions_total{status=\"success\"})",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 4,
+              "x": 4,
+              "y": 1
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 4,
+            "type": "stat",
+            "title": "Errors",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(tool_executions_total{status=\"error\"})",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 4,
+              "x": 8,
+              "y": 1
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "orange",
+                      "value": 1
+                    },
+                    {
+                      "color": "red",
+                      "value": 10
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 5,
+            "type": "stat",
+            "title": "Registry Size",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "max(tool_registry_size_sum) / max(tool_registry_size_count)",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 4,
+              "x": 12,
+              "y": 1
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "purple",
+                      "value": null
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 6,
+            "type": "stat",
+            "title": "Permission Denied",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(tool_permission_checks_total{result=\"denied\"})",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 4,
+              "x": 16,
+              "y": 1
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "orange",
+                      "value": 1
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 7,
+            "type": "stat",
+            "title": "Avg Duration",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "rate(tool_execution_duration_seconds_sum[5m]) / rate(tool_execution_duration_seconds_count[5m])",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 4,
+              "x": 20,
+              "y": 1
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "s",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "blue",
+                      "value": null
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 8,
+            "type": "timeseries",
+            "title": "Tool Executions Rate (per minute)",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(tool_executions_total{status=\"success\"}[1m]))*60",
+                "legendFormat": "Success"
+              },
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(tool_executions_total{status=\"error\"}[1m]))*60",
+                "legendFormat": "Error"
+              }
+            ],
+            "gridPos": {
+              "h": 8,
+              "w": 8,
+              "x": 0,
+              "y": 5
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "reqps",
+                "custom": {
+                  "drawStyle": "line",
+                  "fillOpacity": 30,
+                  "lineWidth": 2,
+                  "stacking": {
+                    "mode": "normal"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "id": 9,
+            "type": "piechart",
+            "title": "Executions by Tool",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(tool_executions_total) by (tool)",
+                "legendFormat": "{{tool}}"
+              }
+            ],
+            "gridPos": {
+              "h": 8,
+              "w": 8,
+              "x": 8,
+              "y": 5
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "legend": {
+                "displayMode": "table",
+                "placement": "right"
+              },
+              "pieType": "donut"
+            }
+          },
+          {
+            "id": 10,
+            "type": "piechart",
+            "title": "Errors by Type",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(tool_errors_total) by (error_type)",
+                "legendFormat": "{{error_type}}"
+              }
+            ],
+            "gridPos": {
+              "h": 8,
+              "w": 8,
+              "x": 16,
+              "y": 5
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "legend": {
+                "displayMode": "table",
+                "placement": "right"
+              },
+              "pieType": "donut"
+            }
+          }
+        ]
+      },
+      {
+        "id": 11,
+        "type": "row",
+        "title": "Tool Registry",
+        "collapsed": true,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 13
+        },
+        "panels": [
+          {
+            "id": 12,
+            "type": "stat",
+            "title": "Total Registrations",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(tool_registry_registrations_total)",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 6,
+              "x": 0,
+              "y": 14
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "blue",
+                      "value": null
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 13,
+            "type": "stat",
+            "title": "Registry Lookups (hits)",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(tool_registry_lookups_total{status=\"hit\"})",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 6,
+              "x": 6,
+              "y": 14
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 14,
+            "type": "stat",
+            "title": "Registry Lookups (misses)",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(tool_registry_lookups_total{status=\"miss\"})",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 6,
+              "x": 12,
+              "y": 14
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "orange",
+                      "value": 1
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 15,
+            "type": "stat",
+            "title": "Tool Removals",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(tool_registry_removals_total)",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 6,
+              "x": 18,
+              "y": 14
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "yellow",
+                      "value": null
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 16,
+            "type": "timeseries",
+            "title": "Registry Lookups Rate (per minute)",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(tool_registry_lookups_total{status=\"hit\"}[1m]))*60",
+                "legendFormat": "Hits"
+              },
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(tool_registry_lookups_total{status=\"miss\"}[1m]))*60",
+                "legendFormat": "Misses"
+              }
+            ],
+            "gridPos": {
+              "h": 8,
+              "w": 12,
+              "x": 0,
+              "y": 18
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "custom": {
+                  "drawStyle": "line",
+                  "fillOpacity": 30,
+                  "lineWidth": 2,
+                  "stacking": {
+                    "mode": "normal"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "id": 17,
+            "type": "timeseries",
+            "title": "Registry Size Over Time",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "rate(tool_registry_size_sum[5m]) / rate(tool_registry_size_count[5m])",
+                "legendFormat": "Registry Size"
+              }
+            ],
+            "gridPos": {
+              "h": 8,
+              "w": 12,
+              "x": 12,
+              "y": 18
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "custom": {
+                  "drawStyle": "line",
+                  "fillOpacity": 10,
+                  "lineWidth": 2
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 18,
+        "type": "row",
+        "title": "Tool Execution with Timeout & Error Handling",
+        "collapsed": true,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 26
+        },
+        "panels": [
+          {
+            "id": 19,
+            "type": "timeseries",
+            "title": "Execution Duration by Tool (avg, 5m)",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "rate(tool_execution_duration_seconds_sum[5m]) / rate(tool_execution_duration_seconds_count[5m])",
+                "legendFormat": "Avg (all tools)"
+              },
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "topk(5, rate(tool_execution_duration_seconds_sum[5m]) / rate(tool_execution_duration_seconds_count[5m]))",
+                "legendFormat": "{{tool}}"
+              }
+            ],
+            "gridPos": {
+              "h": 8,
+              "w": 12,
+              "x": 0,
+              "y": 27
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "s",
+                "custom": {
+                  "drawStyle": "line",
+                  "fillOpacity": 10,
+                  "lineWidth": 2
+                }
+              }
+            }
+          },
+          {
+            "id": 20,
+            "type": "timeseries",
+            "title": "Execution Rate by Tool (per minute)",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(tool_executions_total[1m])) by (tool) * 60",
+                "legendFormat": "{{tool}}"
+              }
+            ],
+            "gridPos": {
+              "h": 8,
+              "w": 12,
+              "x": 12,
+              "y": 27
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "reqps",
+                "custom": {
+                  "drawStyle": "line",
+                  "fillOpacity": 10,
+                  "lineWidth": 2
+                }
+              }
+            }
+          },
+          {
+            "id": 21,
+            "type": "timeseries",
+            "title": "Errors by Type Over Time (per minute)",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(tool_errors_total{error_type=\"timeout\"}[1m]))*60",
+                "legendFormat": "Timeout"
+              },
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(tool_errors_total{error_type=\"permission\"}[1m]))*60",
+                "legendFormat": "Permission"
+              },
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(tool_errors_total{error_type=\"validation\"}[1m]))*60",
+                "legendFormat": "Validation"
+              },
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(tool_errors_total{error_type=\"notfound\"}[1m]))*60",
+                "legendFormat": "Not Found"
+              },
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(tool_errors_total{error_type=\"execution\"}[1m]))*60",
+                "legendFormat": "Execution"
+              },
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(tool_errors_total{error_type=\"unknown\"}[1m]))*60",
+                "legendFormat": "Unknown"
+              }
+            ],
+            "gridPos": {
+              "h": 8,
+              "w": 12,
+              "x": 0,
+              "y": 35
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "custom": {
+                  "drawStyle": "line",
+                  "fillOpacity": 30,
+                  "lineWidth": 2,
+                  "stacking": {
+                    "mode": "normal"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "id": 22,
+            "type": "bargauge",
+            "title": "Errors by Tool (top 10)",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "topk(10, sum(tool_errors_total) by (tool))",
+                "legendFormat": "{{tool}}"
+              }
+            ],
+            "gridPos": {
+              "h": 8,
+              "w": 12,
+              "x": 12,
+              "y": 35
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "displayMode": "gradient",
+              "orientation": "horizontal"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short"
+              }
+            }
+          },
+          {
+            "id": 23,
+            "type": "stat",
+            "title": "Success Rate",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(tool_executions_total{status=\"success\"}) / sum(tool_executions_total)",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 6,
+              "x": 0,
+              "y": 43
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "percentunit",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "red",
+                      "value": null
+                    },
+                    {
+                      "color": "yellow",
+                      "value": 0.9
+                    },
+                    {
+                      "color": "green",
+                      "value": 0.95
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 24,
+            "type": "stat",
+            "title": "Timeout Errors",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(tool_errors_total{error_type=\"timeout\"})",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 6,
+              "x": 6,
+              "y": 43
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "orange",
+                      "value": 1
+                    },
+                    {
+                      "color": "red",
+                      "value": 5
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 25,
+            "type": "stat",
+            "title": "Validation Errors",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(tool_errors_total{error_type=\"validation\"})",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 6,
+              "x": 12,
+              "y": 43
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "yellow",
+                      "value": 1
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 26,
+            "type": "stat",
+            "title": "Execution Errors",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(tool_errors_total{error_type=\"execution\"})",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 6,
+              "x": 18,
+              "y": 43
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "red",
+                      "value": 1
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 27,
+        "type": "row",
+        "title": "Permission System & Audit",
+        "collapsed": true,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 47
+        },
+        "panels": [
+          {
+            "id": 28,
+            "type": "timeseries",
+            "title": "Permission Checks Rate (per minute)",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(tool_permission_checks_total{result=\"allowed\"}[1m]))*60",
+                "legendFormat": "Allowed"
+              },
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(rate(tool_permission_checks_total{result=\"denied\"}[1m]))*60",
+                "legendFormat": "Denied"
+              }
+            ],
+            "gridPos": {
+              "h": 8,
+              "w": 8,
+              "x": 0,
+              "y": 48
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "custom": {
+                  "drawStyle": "line",
+                  "fillOpacity": 30,
+                  "lineWidth": 2,
+                  "stacking": {
+                    "mode": "normal"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "id": 29,
+            "type": "piechart",
+            "title": "Permission Checks by Mode",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(tool_permission_checks_total) by (mode)",
+                "legendFormat": "{{mode}}"
+              }
+            ],
+            "gridPos": {
+              "h": 8,
+              "w": 8,
+              "x": 8,
+              "y": 48
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "legend": {
+                "displayMode": "table",
+                "placement": "right"
+              },
+              "pieType": "donut"
+            }
+          },
+          {
+            "id": 30,
+            "type": "piechart",
+            "title": "Permission Results",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(tool_permission_checks_total) by (result)",
+                "legendFormat": "{{result}}"
+              }
+            ],
+            "gridPos": {
+              "h": 8,
+              "w": 8,
+              "x": 16,
+              "y": 48
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "legend": {
+                "displayMode": "table",
+                "placement": "right"
+              },
+              "pieType": "donut"
+            }
+          },
+          {
+            "id": 31,
+            "type": "stat",
+            "title": "Allowed Checks",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(tool_permission_checks_total{result=\"allowed\"})",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 6,
+              "x": 0,
+              "y": 56
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 32,
+            "type": "stat",
+            "title": "Denied Checks",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(tool_permission_checks_total{result=\"denied\"})",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 6,
+              "x": 6,
+              "y": 56
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "orange",
+                      "value": 1
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 33,
+            "type": "stat",
+            "title": "Not Found Errors",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(tool_errors_total{error_type=\"notfound\"})",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 6,
+              "x": 12,
+              "y": 56
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "orange",
+                      "value": 1
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 34,
+            "type": "stat",
+            "title": "Permission Errors",
+            "datasource": {
+              "type": "prometheus",
+              "uid": "PBFA97CFB590B2093"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "PBFA97CFB590B2093"
+                },
+                "expr": "sum(tool_errors_total{error_type=\"permission\"})",
+                "legendFormat": "",
+                "instant": true,
+                "range": false
+              }
+            ],
+            "gridPos": {
+              "h": 4,
+              "w": 6,
+              "x": 18,
+              "y": 56
+            },
+            "options": {
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ]
+              },
+              "colorMode": "background"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "red",
+                      "value": 1
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 35,
+        "type": "row",
+        "title": "Tool Execution Logs",
+        "collapsed": true,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 60
+        },
+        "panels": [
+          {
+            "id": 36,
+            "type": "logs",
+            "title": "Tool Execution Logs (all)",
+            "datasource": {
+              "type": "loki",
+              "uid": "loki-datasource"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "loki",
+                  "uid": "loki-datasource"
+                },
+                "expr": "{job=\"ia-agent-fwk\"} |= \"tool_data\"",
+                "queryType": "range"
+              }
+            ],
+            "gridPos": {
+              "h": 8,
+              "w": 24,
+              "x": 0,
+              "y": 61
+            },
+            "options": {
+              "showTime": true,
+              "sortOrder": "Descending",
+              "enableLogDetails": true,
+              "wrapLogMessage": true
+            }
+          },
+          {
+            "id": 37,
+            "type": "logs",
+            "title": "Tool Error Logs",
+            "datasource": {
+              "type": "loki",
+              "uid": "loki-datasource"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "loki",
+                  "uid": "loki-datasource"
+                },
+                "expr": "{job=\"ia-agent-fwk\"} |= \"tool_data\" |= \"error\"",
+                "queryType": "range"
+              }
+            ],
+            "gridPos": {
+              "h": 8,
+              "w": 12,
+              "x": 0,
+              "y": 69
+            },
+            "options": {
+              "showTime": true,
+              "sortOrder": "Descending",
+              "enableLogDetails": true,
+              "wrapLogMessage": true
+            }
+          },
+          {
+            "id": 38,
+            "type": "logs",
+            "title": "Tool Permission / Timeout Logs",
+            "datasource": {
+              "type": "loki",
+              "uid": "loki-datasource"
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "loki",
+                  "uid": "loki-datasource"
+                },
+                "expr": "{job=\"ia-agent-fwk\"} |= \"tool_data\" |~ \"permission|timeout\"",
+                "queryType": "range"
+              }
+            ],
+            "gridPos": {
+              "h": 8,
+              "w": 12,
+              "x": 12,
+              "y": 69
+            },
+            "options": {
+              "showTime": true,
+              "sortOrder": "Descending",
+              "enableLogDetails": true,
+              "wrapLogMessage": true
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "overwrite": true
+}

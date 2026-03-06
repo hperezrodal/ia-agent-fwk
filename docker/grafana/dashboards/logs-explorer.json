@@ -1,0 +1,233 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "title": "Log Volume by Service",
+      "type": "timeseries",
+      "gridPos": { "h": 6, "w": 24, "x": 0, "y": 0 },
+      "datasource": { "type": "loki", "uid": "loki-datasource" },
+      "targets": [
+        {
+          "expr": "sum by (service) (count_over_time({project=~\".+\"} [1m]))",
+          "legendFormat": "{{service}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": { "drawStyle": "bars", "fillOpacity": 30, "stacking": { "mode": "normal" } },
+          "color": { "mode": "palette-classic" }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": { "displayMode": "table", "placement": "right" },
+        "tooltip": { "mode": "multi" }
+      }
+    },
+    {
+      "title": "LLM Prompts & Responses",
+      "type": "row",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 6 },
+      "collapsed": false
+    },
+    {
+      "title": "All LLM Interactions",
+      "description": "Full prompt/response log from the reasoning loop. Filter by agent, model, or content.",
+      "type": "logs",
+      "gridPos": { "h": 12, "w": 24, "x": 0, "y": 7 },
+      "datasource": { "type": "loki", "uid": "loki-datasource" },
+      "targets": [
+        {
+          "expr": "{service=\"api\"} |= \"llm_prompt\" | json | prompt_data_event = \"llm_prompt\"",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "options": {
+        "showTime": true,
+        "showLabels": true,
+        "showCommonLabels": false,
+        "wrapLogMessage": true,
+        "prettifyLogMessage": true,
+        "enableLogDetails": true,
+        "sortOrder": "Descending",
+        "dedupStrategy": "none"
+      }
+    },
+    {
+      "title": "Agent Lifecycle",
+      "type": "row",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 19 },
+      "collapsed": false
+    },
+    {
+      "title": "Agent State Transitions",
+      "description": "Track agent state changes: IDLE → RUNNING → COMPLETED/FAILED",
+      "type": "logs",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 20 },
+      "datasource": { "type": "loki", "uid": "loki-datasource" },
+      "targets": [
+        {
+          "expr": "{service=\"api\"} |= \"agent_state_transition\" | json",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "options": {
+        "showTime": true,
+        "showLabels": true,
+        "wrapLogMessage": true,
+        "prettifyLogMessage": true,
+        "enableLogDetails": true,
+        "sortOrder": "Descending"
+      }
+    },
+    {
+      "title": "Tool Executions",
+      "description": "All tool calls with status, duration, and errors",
+      "type": "logs",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 20 },
+      "datasource": { "type": "loki", "uid": "loki-datasource" },
+      "targets": [
+        {
+          "expr": "{service=\"api\"} |= \"tool_execution\" | json",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "options": {
+        "showTime": true,
+        "showLabels": true,
+        "wrapLogMessage": true,
+        "prettifyLogMessage": true,
+        "enableLogDetails": true,
+        "sortOrder": "Descending"
+      }
+    },
+    {
+      "title": "Infrastructure Logs",
+      "type": "row",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 28 },
+      "collapsed": false
+    },
+    {
+      "title": "API Server Logs",
+      "type": "logs",
+      "gridPos": { "h": 10, "w": 12, "x": 0, "y": 29 },
+      "datasource": { "type": "loki", "uid": "loki-datasource" },
+      "targets": [
+        {
+          "expr": "{service=\"api\"}",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "options": {
+        "showTime": true,
+        "showLabels": false,
+        "wrapLogMessage": true,
+        "prettifyLogMessage": true,
+        "enableLogDetails": true,
+        "sortOrder": "Descending"
+      }
+    },
+    {
+      "title": "Ollama Logs",
+      "type": "logs",
+      "gridPos": { "h": 10, "w": 12, "x": 12, "y": 29 },
+      "datasource": { "type": "loki", "uid": "loki-datasource" },
+      "targets": [
+        {
+          "expr": "{service=\"ollama\"}",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "options": {
+        "showTime": true,
+        "showLabels": false,
+        "wrapLogMessage": true,
+        "prettifyLogMessage": true,
+        "enableLogDetails": true,
+        "sortOrder": "Descending"
+      }
+    },
+    {
+      "title": "Qdrant Logs",
+      "type": "logs",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 39 },
+      "datasource": { "type": "loki", "uid": "loki-datasource" },
+      "targets": [
+        {
+          "expr": "{service=\"qdrant\"}",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "options": {
+        "showTime": true,
+        "wrapLogMessage": true,
+        "prettifyLogMessage": true,
+        "enableLogDetails": true,
+        "sortOrder": "Descending"
+      }
+    },
+    {
+      "title": "Redis Logs",
+      "type": "logs",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 39 },
+      "datasource": { "type": "loki", "uid": "loki-datasource" },
+      "targets": [
+        {
+          "expr": "{service=\"redis\"}",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "options": {
+        "showTime": true,
+        "wrapLogMessage": true,
+        "prettifyLogMessage": true,
+        "enableLogDetails": true,
+        "sortOrder": "Descending"
+      }
+    },
+    {
+      "title": "Errors (All Services)",
+      "description": "All WARNING and ERROR level logs across the stack",
+      "type": "logs",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 39 },
+      "datasource": { "type": "loki", "uid": "loki-datasource" },
+      "targets": [
+        {
+          "expr": "{service=~\".+\"} | json | level =~ \"WARNING|ERROR|CRITICAL\"",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "options": {
+        "showTime": true,
+        "showLabels": true,
+        "wrapLogMessage": true,
+        "prettifyLogMessage": true,
+        "enableLogDetails": true,
+        "sortOrder": "Descending"
+      }
+    }
+  ],
+  "schemaVersion": 39,
+  "tags": ["ia-agent-fwk", "logs", "observability"],
+  "templating": { "list": [] },
+  "time": { "from": "now-30m", "to": "now" },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "IA Agent FWK - Logs Explorer",
+  "uid": "ia-agent-fwk-logs",
+  "version": 1
+}
