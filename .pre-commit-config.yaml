@@ -29,3 +29,11 @@ repos:
         types: [python]
         files: ^src/
         pass_filenames: false
+
+      - id: pytest-unit
+        name: unit tests
+        entry: pytest tests/unit/ -x -q
+        language: system
+        types: [python]
+        files: ^(src|tests)/
+        pass_filenames: false
