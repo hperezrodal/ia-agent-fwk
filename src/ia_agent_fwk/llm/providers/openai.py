@@ -166,11 +166,10 @@ class OpenAIProvider(LLMProvider):
                 collector.observe(
                     "llm_request_duration_seconds", duration_ms / 1000, labels={"provider": "openai", "model": model}
                 )
-                logger.error(
-                    "OpenAI chat failed: model=%s (%.1fms) - %s",
+                logger.exception(
+                    "OpenAI chat failed: model=%s (%.1fms)",
                     model,
                     duration_ms,
-                    exc,
                     extra={
                         "llm_data": {
                             "event": "chat_error",

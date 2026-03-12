@@ -111,8 +111,8 @@ class _MockLLMProvider(LLMProvider):
 def slack_integration():
     """Slack integration with test credentials."""
     return SlackIntegration(
-        bot_token="xoxb-test-token",
-        signing_secret="test-signing-secret",
+        bot_token="xoxb-test-token",  # noqa: S106
+        signing_secret="test-signing-secret",  # noqa: S106
         default_channel="#general",
     )
 
@@ -125,7 +125,7 @@ def email_integration():
         smtp_port=587,
         from_address="bot@test.com",
         username="bot@test.com",
-        password="test-password",
+        password="test-password",  # noqa: S106
     )
 
 
@@ -133,9 +133,9 @@ def email_integration():
 def whatsapp_integration():
     """WhatsApp integration with test credentials."""
     return WhatsAppIntegration(
-        access_token="test-access-token",
+        access_token="test-access-token",  # noqa: S106
         phone_number_id="123456789",
-        verify_token="test-verify-token",
+        verify_token="test-verify-token",  # noqa: S106
     )
 
 
@@ -180,8 +180,7 @@ def sample_outgoing_message():
 @pytest.fixture
 def mock_httpx_client():
     """Mock httpx.AsyncClient."""
-    mock = AsyncMock(spec=httpx.AsyncClient)
-    return mock
+    return AsyncMock(spec=httpx.AsyncClient)
 
 
 @pytest.fixture
@@ -192,13 +191,13 @@ def test_settings_integrations(monkeypatch) -> AppSettings:
         auth=AuthSettings(enabled=True),
         memory=MemorySettings(default_backend="in_memory"),
         integrations=IntegrationsSettings(
-            slack=SlackIntegrationSettings(enabled=True, bot_token="xoxb-test", default_agent="test"),
+            slack=SlackIntegrationSettings(enabled=True, bot_token="xoxb-test", default_agent="test"),  # noqa: S106
             email=EmailIntegrationSettings(enabled=True, default_agent="test"),
             whatsapp=WhatsAppIntegrationSettings(
                 enabled=True,
-                access_token="test-token",
+                access_token="test-token",  # noqa: S106
                 phone_number_id="123",
-                verify_token="test-verify",
+                verify_token="test-verify",  # noqa: S106
                 default_agent="test",
             ),
         ),
@@ -213,13 +212,13 @@ def test_settings_email_disabled(monkeypatch) -> AppSettings:
         auth=AuthSettings(enabled=True),
         memory=MemorySettings(default_backend="in_memory"),
         integrations=IntegrationsSettings(
-            slack=SlackIntegrationSettings(enabled=True, bot_token="xoxb-test", default_agent="test"),
+            slack=SlackIntegrationSettings(enabled=True, bot_token="xoxb-test", default_agent="test"),  # noqa: S106
             email=EmailIntegrationSettings(enabled=False),
             whatsapp=WhatsAppIntegrationSettings(
                 enabled=True,
-                access_token="test-token",
+                access_token="test-token",  # noqa: S106
                 phone_number_id="123",
-                verify_token="test-verify",
+                verify_token="test-verify",  # noqa: S106
                 default_agent="test",
             ),
         ),
@@ -234,7 +233,7 @@ def test_app_email_disabled(test_settings_email_disabled):
 
     mock_provider = _MockLLMProvider()
 
-    def mock_create(config, llm_settings, **kwargs):
+    def mock_create(config, _llm_settings, **_kwargs):
         return _TestAgent(config=config, provider=mock_provider)
 
     with patch("ia_agent_fwk.api.routes.agents.AgentFactory.create", side_effect=mock_create):
@@ -265,7 +264,7 @@ def test_app_integrations(test_settings_integrations):
 
     mock_provider = _MockLLMProvider()
 
-    def mock_create(config, llm_settings, **kwargs):
+    def mock_create(config, _llm_settings, **_kwargs):
         return _TestAgent(config=config, provider=mock_provider)
 
     with patch("ia_agent_fwk.api.routes.agents.AgentFactory.create", side_effect=mock_create):

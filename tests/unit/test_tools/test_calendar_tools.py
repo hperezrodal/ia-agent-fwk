@@ -879,7 +879,7 @@ class TestGoogleCalendarTool:
         tool = GoogleCalendarTool(
             token_path=tmp_path / "nonexistent_token.json",
         )
-        with patch.dict(sys.modules, modules), pytest.raises(Exception, match="No token.json"):
+        with patch.dict(sys.modules, modules), pytest.raises(Exception, match=r"No token\.json"):
             tool._get_service()
 
     async def test_get_service_refreshes_expired_token(self, tool_context, tmp_path):
@@ -889,7 +889,7 @@ class TestGoogleCalendarTool:
 
         mock_creds = MagicMock()
         type(mock_creds).expired = PropertyMock(return_value=True)
-        mock_creds.refresh_token = "refresh-tok"
+        mock_creds.refresh_token = "refresh-tok"  # noqa: S105
         mock_creds.to_json.return_value = '{"token": "new"}'
 
         mock_google = MagicMock(spec=ModuleType)

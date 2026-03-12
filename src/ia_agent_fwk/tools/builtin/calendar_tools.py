@@ -12,7 +12,6 @@ import logging
 import re
 from datetime import date as date_type
 from datetime import datetime, timedelta, timezone
-from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -22,6 +21,8 @@ from ia_agent_fwk.tools.builtin.calendar_models import CalendarAgentStore
 from ia_agent_fwk.tools.exceptions import ToolExecutionError
 
 if TYPE_CHECKING:
+    from pathlib import Path
+
     from ia_agent_fwk.llm.base import LLMProvider
     from ia_agent_fwk.tools.base import ToolContext
 
@@ -121,7 +122,7 @@ class EmailParserTool(Tool):
     def tags(self) -> list[str]:
         return ["calendar", "email", "parsing"]
 
-    async def execute(self, validated_input: BaseModel, context: ToolContext) -> BaseModel:
+    async def execute(self, validated_input: BaseModel, _context: ToolContext) -> BaseModel:
         inp: EmailParserInput = validated_input  # type: ignore[assignment]
 
         # Choose best source
@@ -263,7 +264,7 @@ class EventExtractorTool(Tool):
     def tags(self) -> list[str]:
         return ["calendar", "llm", "extraction"]
 
-    async def execute(self, validated_input: BaseModel, context: ToolContext) -> BaseModel:
+    async def execute(self, validated_input: BaseModel, _context: ToolContext) -> BaseModel:
         from ia_agent_fwk.llm.models import Message  # noqa: PLC0415
 
         inp: EventExtractorInput = validated_input  # type: ignore[assignment]
@@ -405,7 +406,7 @@ class EventValidatorTool(Tool):
     def tags(self) -> list[str]:
         return ["calendar", "validation"]
 
-    async def execute(self, validated_input: BaseModel, context: ToolContext) -> BaseModel:
+    async def execute(self, validated_input: BaseModel, _context: ToolContext) -> BaseModel:  # noqa: C901, PLR0912
         inp: EventValidatorInput = validated_input  # type: ignore[assignment]
 
         errors: list[str] = []
@@ -527,7 +528,7 @@ class DuplicateCheckerTool(Tool):
     def tags(self) -> list[str]:
         return ["calendar", "deduplication"]
 
-    async def execute(self, validated_input: BaseModel, context: ToolContext) -> BaseModel:
+    async def execute(self, validated_input: BaseModel, _context: ToolContext) -> BaseModel:
         inp: DuplicateCheckerInput = validated_input  # type: ignore[assignment]
 
         event_hash = CalendarAgentStore.compute_event_hash(inp.title, inp.date, inp.start_time)
@@ -625,7 +626,7 @@ class GoogleCalendarTool(Tool):
     def tags(self) -> list[str]:
         return ["calendar", "google", "api"]
 
-    async def execute(self, validated_input: BaseModel, context: ToolContext) -> BaseModel:
+    async def execute(self, validated_input: BaseModel, _context: ToolContext) -> BaseModel:
         inp: GoogleCalendarInput = validated_input  # type: ignore[assignment]
 
         if not _has_google_libs():
@@ -727,10 +728,7 @@ class GoogleCalendarTool(Tool):
         if inp.date and inp.start_time:
             start_str = f"{inp.date}T{inp.start_time}:00"
             body["start"] = {"dateTime": start_str, "timeZone": inp.timezone}
-            if inp.end_time:
-                end_str = f"{inp.date}T{inp.end_time}:00"
-            else:
-                end_str = start_str
+            end_str = f"{inp.date}T{inp.end_time}:00" if inp.end_time else start_str
             body["end"] = {"dateTime": end_str, "timeZone": inp.timezone}
 
         if inp.location:

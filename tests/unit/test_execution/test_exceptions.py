@@ -32,28 +32,34 @@ class TestExceptionHierarchy:
         assert issubclass(JobTimeoutError, ExecutionError)
 
     def test_execution_error_message(self):
-        exc = ExecutionError("test error")
+        msg = "test error"
+        exc = ExecutionError(msg)
         assert str(exc) == "test error"
 
     def test_job_not_found_message(self):
-        exc = JobNotFoundError("job-123 not found")
+        msg = "job-123 not found"
+        exc = JobNotFoundError(msg)
         assert str(exc) == "job-123 not found"
 
     def test_job_timeout_message(self):
-        exc = JobTimeoutError("timed out after 300s")
+        msg = "timed out after 300s"
+        exc = JobTimeoutError(msg)
         assert str(exc) == "timed out after 300s"
 
     def test_job_cancellation_message(self):
-        exc = JobCancellationError("failed to cancel")
+        msg = "failed to cancel"
+        exc = JobCancellationError(msg)
         assert str(exc) == "failed to cancel"
 
     def test_exception_can_be_caught_as_base(self):
+        msg = "not found"
         with pytest.raises(ExecutionError):
-            raise JobNotFoundError("not found")
+            raise JobNotFoundError(msg)
 
     def test_exception_can_be_caught_as_specific(self):
+        msg = "not found"
         with pytest.raises(JobNotFoundError):
-            raise JobNotFoundError("not found")
+            raise JobNotFoundError(msg)
 
     # --- ScheduleError hierarchy ---
 
@@ -61,7 +67,8 @@ class TestExceptionHierarchy:
         assert issubclass(ScheduleError, ExecutionError)
 
     def test_schedule_error_message(self):
-        exc = ScheduleError("schedule failed")
+        msg = "schedule failed"
+        exc = ScheduleError(msg)
         assert str(exc) == "schedule failed"
 
     def test_schedule_not_found_is_schedule_error(self):
@@ -71,12 +78,14 @@ class TestExceptionHierarchy:
         assert issubclass(ScheduleNotFoundError, ExecutionError)
 
     def test_schedule_not_found_message(self):
-        exc = ScheduleNotFoundError("schedule-123 not found")
+        msg = "schedule-123 not found"
+        exc = ScheduleNotFoundError(msg)
         assert str(exc) == "schedule-123 not found"
 
     def test_schedule_not_found_caught_as_schedule_error(self):
+        msg = "not found"
         with pytest.raises(ScheduleError):
-            raise ScheduleNotFoundError("not found")
+            raise ScheduleNotFoundError(msg)
 
     def test_invalid_cron_is_schedule_error(self):
         assert issubclass(InvalidCronExpressionError, ScheduleError)
@@ -85,12 +94,14 @@ class TestExceptionHierarchy:
         assert issubclass(InvalidCronExpressionError, ExecutionError)
 
     def test_invalid_cron_message(self):
-        exc = InvalidCronExpressionError("bad cron: * * *")
+        msg = "bad cron: * * *"
+        exc = InvalidCronExpressionError(msg)
         assert str(exc) == "bad cron: * * *"
 
     def test_invalid_cron_caught_as_schedule_error(self):
+        msg = "bad cron"
         with pytest.raises(ScheduleError):
-            raise InvalidCronExpressionError("bad cron")
+            raise InvalidCronExpressionError(msg)
 
     # --- TriggerError hierarchy ---
 
@@ -98,7 +109,8 @@ class TestExceptionHierarchy:
         assert issubclass(TriggerError, ExecutionError)
 
     def test_trigger_error_message(self):
-        exc = TriggerError("trigger failed")
+        msg = "trigger failed"
+        exc = TriggerError(msg)
         assert str(exc) == "trigger failed"
 
     def test_trigger_not_found_is_trigger_error(self):
@@ -108,13 +120,16 @@ class TestExceptionHierarchy:
         assert issubclass(TriggerNotFoundError, ExecutionError)
 
     def test_trigger_not_found_message(self):
-        exc = TriggerNotFoundError("trigger-456 not found")
+        msg = "trigger-456 not found"
+        exc = TriggerNotFoundError(msg)
         assert str(exc) == "trigger-456 not found"
 
     def test_trigger_not_found_caught_as_trigger_error(self):
+        msg = "not found"
         with pytest.raises(TriggerError):
-            raise TriggerNotFoundError("not found")
+            raise TriggerNotFoundError(msg)
 
     def test_trigger_not_found_caught_as_execution_error(self):
+        msg = "not found"
         with pytest.raises(ExecutionError):
-            raise TriggerNotFoundError("not found")
+            raise TriggerNotFoundError(msg)

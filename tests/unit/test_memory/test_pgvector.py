@@ -75,7 +75,7 @@ class TestPgVectorMemoryBackend:
     @patch("ia_agent_fwk.memory.backends.pgvector.asyncpg")
     async def test_store_and_retrieve(self, mock_asyncpg):
         backend = _make_backend()
-        mock_pool, mock_conn = _setup_mock_pool(mock_asyncpg)
+        _mock_pool, mock_conn = _setup_mock_pool(mock_asyncpg)
 
         # Store
         mock_conn.execute = AsyncMock(return_value="INSERT 0 1")
@@ -90,7 +90,7 @@ class TestPgVectorMemoryBackend:
         provider.embed = AsyncMock(return_value=[[0.1] * 1536])  # type: ignore[method-assign]
         backend = _make_backend(embedding_provider=provider)
 
-        mock_pool, mock_conn = _setup_mock_pool(mock_asyncpg)
+        _mock_pool, mock_conn = _setup_mock_pool(mock_asyncpg)
         mock_conn.execute = AsyncMock(return_value="INSERT 0 1")
 
         await backend.store("key1", "hello world")
@@ -102,7 +102,7 @@ class TestPgVectorMemoryBackend:
         provider.embed = AsyncMock(return_value=[[0.1] * 1536])  # type: ignore[method-assign]
         backend = _make_backend(embedding_provider=provider)
 
-        mock_pool, mock_conn = _setup_mock_pool(mock_asyncpg)
+        _mock_pool, mock_conn = _setup_mock_pool(mock_asyncpg)
         mock_conn.execute = AsyncMock(return_value="INSERT 0 1")
 
         await backend.store("key1", "hello", metadata={"embedding": [0.5] * 1536})
@@ -111,7 +111,7 @@ class TestPgVectorMemoryBackend:
     @patch("ia_agent_fwk.memory.backends.pgvector.asyncpg")
     async def test_retrieve_existing(self, mock_asyncpg):
         backend = _make_backend()
-        mock_pool, mock_conn = _setup_mock_pool(mock_asyncpg)
+        _mock_pool, mock_conn = _setup_mock_pool(mock_asyncpg)
 
         mock_conn.fetchrow = AsyncMock(return_value={"value": "hello world"})
         result = await backend.retrieve("key1")
@@ -120,7 +120,7 @@ class TestPgVectorMemoryBackend:
     @patch("ia_agent_fwk.memory.backends.pgvector.asyncpg")
     async def test_retrieve_nonexistent(self, mock_asyncpg):
         backend = _make_backend()
-        mock_pool, mock_conn = _setup_mock_pool(mock_asyncpg)
+        _mock_pool, mock_conn = _setup_mock_pool(mock_asyncpg)
 
         mock_conn.fetchrow = AsyncMock(return_value=None)
         result = await backend.retrieve("nonexistent")
@@ -129,7 +129,7 @@ class TestPgVectorMemoryBackend:
     @patch("ia_agent_fwk.memory.backends.pgvector.asyncpg")
     async def test_search_returns_results(self, mock_asyncpg):
         backend = _make_backend()
-        mock_pool, mock_conn = _setup_mock_pool(mock_asyncpg)
+        _mock_pool, mock_conn = _setup_mock_pool(mock_asyncpg)
 
         mock_conn.fetch = AsyncMock(
             return_value=[
@@ -146,7 +146,7 @@ class TestPgVectorMemoryBackend:
     @patch("ia_agent_fwk.memory.backends.pgvector.asyncpg")
     async def test_delete_existing(self, mock_asyncpg):
         backend = _make_backend()
-        mock_pool, mock_conn = _setup_mock_pool(mock_asyncpg)
+        _mock_pool, mock_conn = _setup_mock_pool(mock_asyncpg)
 
         mock_conn.execute = AsyncMock(return_value="DELETE 1")
         result = await backend.delete("key1")
@@ -155,7 +155,7 @@ class TestPgVectorMemoryBackend:
     @patch("ia_agent_fwk.memory.backends.pgvector.asyncpg")
     async def test_delete_nonexistent(self, mock_asyncpg):
         backend = _make_backend()
-        mock_pool, mock_conn = _setup_mock_pool(mock_asyncpg)
+        _mock_pool, mock_conn = _setup_mock_pool(mock_asyncpg)
 
         mock_conn.execute = AsyncMock(return_value="DELETE 0")
         result = await backend.delete("nonexistent")
@@ -164,7 +164,7 @@ class TestPgVectorMemoryBackend:
     @patch("ia_agent_fwk.memory.backends.pgvector.asyncpg")
     async def test_clear(self, mock_asyncpg):
         backend = _make_backend()
-        mock_pool, mock_conn = _setup_mock_pool(mock_asyncpg)
+        _mock_pool, mock_conn = _setup_mock_pool(mock_asyncpg)
 
         await backend.clear()
         # Verify execute was called (for table creation + clear)
@@ -173,7 +173,7 @@ class TestPgVectorMemoryBackend:
     @patch("ia_agent_fwk.memory.backends.pgvector.asyncpg")
     async def test_health_check(self, mock_asyncpg):
         backend = _make_backend()
-        mock_pool, mock_conn = _setup_mock_pool(mock_asyncpg)
+        _mock_pool, _mock_conn = _setup_mock_pool(mock_asyncpg)
 
         result = await backend.health_check()
         assert result is True
@@ -181,7 +181,7 @@ class TestPgVectorMemoryBackend:
     @patch("ia_agent_fwk.memory.backends.pgvector.asyncpg")
     async def test_close(self, mock_asyncpg):
         backend = _make_backend()
-        mock_pool, mock_conn = _setup_mock_pool(mock_asyncpg)
+        mock_pool, _mock_conn = _setup_mock_pool(mock_asyncpg)
 
         # Initialize the pool
         await backend.health_check()
@@ -191,7 +191,7 @@ class TestPgVectorMemoryBackend:
     @patch("ia_agent_fwk.memory.backends.pgvector.asyncpg")
     async def test_table_autocreation(self, mock_asyncpg):
         backend = _make_backend()
-        mock_pool, mock_conn = _setup_mock_pool(mock_asyncpg)
+        _mock_pool, mock_conn = _setup_mock_pool(mock_asyncpg)
 
         mock_conn.fetchrow = AsyncMock(return_value=None)
 

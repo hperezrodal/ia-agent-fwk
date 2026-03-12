@@ -28,7 +28,7 @@ class AgentFactory:
     """Configuration-driven agent factory."""
 
     @classmethod
-    def create(
+    def create(  # noqa: PLR0913
         cls,
         config: AgentConfig,
         llm_settings: LLMSettings,
@@ -54,6 +54,10 @@ class AgentFactory:
             built-in tools (if enabled).
         sandboxing_config:
             Tool sandboxing settings for domain/path allowlists.
+        memory_backend:
+            Optional memory backend for the agent.
+        conversation_backend:
+            Optional conversation memory backend for the agent.
 
         Returns
         -------

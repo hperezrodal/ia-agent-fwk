@@ -33,7 +33,7 @@ class TestMemoryResultModel:
 
     def test_frozen(self):
         result = MemoryResult(key="k1", value="v1")
-        with pytest.raises(Exception):  # noqa: B017
+        with pytest.raises(Exception):  # noqa: B017, PT011
             result.key = "k2"  # type: ignore[misc]
 
 
@@ -56,5 +56,5 @@ class TestMemoryEntryModel:
 
     def test_frozen(self):
         entry = MemoryEntry(key="k1", value="v1")
-        with pytest.raises(Exception):  # noqa: B017
+        with pytest.raises(Exception):  # noqa: B017, PT011
             entry.key = "k2"  # type: ignore[misc]

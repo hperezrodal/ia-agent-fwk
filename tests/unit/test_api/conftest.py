@@ -121,7 +121,7 @@ def test_app(test_settings):
 
     mock_provider = _MockLLMProvider()
 
-    def mock_create(config, llm_settings, **kwargs):
+    def mock_create(config, _llm_settings, **_kwargs):
         return _TestAgent(config=config, provider=mock_provider)
 
     with patch("ia_agent_fwk.api.routes.agents.AgentFactory.create", side_effect=mock_create):

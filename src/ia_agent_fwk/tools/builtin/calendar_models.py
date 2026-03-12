@@ -11,11 +11,12 @@ from __future__ import annotations
 import hashlib
 import json
 import logging
-import os
-from pathlib import Path
-from typing import Any, Literal
+from typing import TYPE_CHECKING, Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
@@ -178,7 +179,7 @@ class CalendarAgentStore:
         }
         tmp_path = path.with_suffix(".tmp")
         tmp_path.write_text(json.dumps(data, indent=2, default=str))
-        os.replace(tmp_path, path)
+        tmp_path.replace(path)
         logger.debug("Store saved to %s", path)
 
     def load(self, path: Path) -> None:

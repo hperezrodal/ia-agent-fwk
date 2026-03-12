@@ -74,7 +74,8 @@ class TestJSONFormatter:
         """Exception info is included in JSON output."""
         formatter = JSONFormatter(include_timestamp=False, include_correlation_id=False)
         try:
-            raise ValueError("test exception")  # noqa: TRY301
+            msg = "test exception"
+            raise ValueError(msg)  # noqa: TRY301
         except ValueError:
             import sys
 

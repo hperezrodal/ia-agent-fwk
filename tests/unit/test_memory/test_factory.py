@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 from unittest.mock import patch
 
 import pytest
@@ -17,7 +17,9 @@ from ia_agent_fwk.memory.base import MemoryBackend
 from ia_agent_fwk.memory.embeddings.base import EmbeddingProvider
 from ia_agent_fwk.memory.exceptions import MemoryConfigError
 from ia_agent_fwk.memory.factory import MemoryFactory
-from ia_agent_fwk.memory.models import MemoryResult
+
+if TYPE_CHECKING:
+    from ia_agent_fwk.memory.models import MemoryResult
 
 
 class _MockEmbeddingProvider(EmbeddingProvider):

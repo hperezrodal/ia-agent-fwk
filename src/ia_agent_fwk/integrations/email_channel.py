@@ -11,6 +11,7 @@ inbound parse) or via IMAP polling using ``poll_inbox()``.
 
 from __future__ import annotations
 
+import contextlib
 import email as email_stdlib
 import email.policy
 import logging
@@ -229,7 +230,7 @@ class EmailIntegration(ChannelIntegration):
     # IMAP polling
     # ------------------------------------------------------------------
 
-    async def poll_inbox(
+    async def poll_inbox(  # noqa: PLR0915
         self,
         folder: str = "INBOX",
         criteria: str = "UNSEEN",
@@ -304,7 +305,8 @@ class EmailIntegration(ChannelIntegration):
                         }
                     },
                 )
-                raise ChannelConnectionError(f"IMAP poll failed: {exc}") from exc
+                err_msg = f"IMAP poll failed: {exc}"
+                raise ChannelConnectionError(err_msg) from exc
             else:
                 duration_ms = (time.monotonic() - start) * 1000
                 collector.increment(
@@ -335,7 +337,7 @@ class EmailIntegration(ChannelIntegration):
         return results
 
     async def mark_as_read(self, message_uid: str, folder: str = "INBOX") -> None:
-        """Mark a message as read (set ``\\Seen`` flag) via IMAP."""
+        r"""Mark a message as read (set ``\Seen`` flag) via IMAP."""
         if not _has_aioimaplib():
             msg = "aioimaplib is required for IMAP operations. Install with: pip install ia-agent-fwk[calendar]"
             raise ChannelConnectionError(msg)
@@ -351,13 +353,12 @@ class EmailIntegration(ChannelIntegration):
             await imap.uid("store", message_uid, "+FLAGS", "(\\Seen)")
         except Exception as exc:
             logger.warning("IMAP mark_as_read failed for uid=%s: %s", message_uid, exc)
-            raise ChannelConnectionError(f"IMAP mark_as_read failed: {exc}") from exc
+            err_msg = f"IMAP mark_as_read failed: {exc}"
+            raise ChannelConnectionError(err_msg) from exc
         finally:
             if imap is not None:
-                try:
+                with contextlib.suppress(Exception):
                     await imap.logout()
-                except Exception:  # noqa: BLE001
-                    pass
 
     # ------------------------------------------------------------------
     # Helpers
@@ -377,7 +378,11 @@ class EmailIntegration(ChannelIntegration):
         import re  # noqa: PLC0415
 
         for line in lines:
-            text = line if isinstance(line, str) else (line.decode("utf-8", errors="replace") if isinstance(line, (bytes, bytearray)) else str(line))
+            text = (
+                line
+                if isinstance(line, str)
+                else (line.decode("utf-8", errors="replace") if isinstance(line, (bytes, bytearray)) else str(line))
+            )
             match = re.search(r"UID\s+(\d+)", text)
             if match:
                 return match.group(1)

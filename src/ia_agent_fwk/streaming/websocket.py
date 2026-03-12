@@ -357,9 +357,19 @@ class WebSocketHandler:
             result = await agent.run(prompt)
         except Exception as exc:
             duration_ms = (time.monotonic() - t0) * 1000
-            collector.increment("ws_agent_executions_completed_total", labels={"agent_type": agent_type, "status": "error"})
-            collector.increment("streaming_events_total", labels={"transport": "websocket", "event": "error"})
-            collector.observe("ws_agent_execution_duration_seconds", duration_ms / 1000, labels={"agent_type": agent_type})
+            collector.increment(
+                "ws_agent_executions_completed_total",
+                labels={"agent_type": agent_type, "status": "error"},
+            )
+            collector.increment(
+                "streaming_events_total",
+                labels={"transport": "websocket", "event": "error"},
+            )
+            collector.observe(
+                "ws_agent_execution_duration_seconds",
+                duration_ms / 1000,
+                labels={"agent_type": agent_type},
+            )
             logger.exception(
                 "WebSocket agent error for '%s' (%.0fms)",
                 agent_type,
@@ -385,7 +395,10 @@ class WebSocketHandler:
 
         # Complete event
         duration_ms = (time.monotonic() - t0) * 1000
-        collector.increment("ws_agent_executions_completed_total", labels={"agent_type": agent_type, "status": "success"})
+        collector.increment(
+            "ws_agent_executions_completed_total",
+            labels={"agent_type": agent_type, "status": "success"},
+        )
         collector.increment("streaming_events_total", labels={"transport": "websocket", "event": "complete"})
         collector.observe("ws_agent_execution_duration_seconds", duration_ms / 1000, labels={"agent_type": agent_type})
 

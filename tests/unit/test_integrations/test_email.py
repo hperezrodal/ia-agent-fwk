@@ -72,9 +72,11 @@ class TestEmailIntegration:
         smtp_exc = mock_mod.SMTPException("SMTP error")
         mock_mod.send = AsyncMock(side_effect=smtp_exc)
 
-        with patch.dict(sys.modules, {"aiosmtplib": mock_mod}):
-            with pytest.raises(MessageDeliveryError, match="Failed to send email"):
-                await email_integration.send_message(msg)
+        with (
+            patch.dict(sys.modules, {"aiosmtplib": mock_mod}),
+            pytest.raises(MessageDeliveryError, match="Failed to send email"),
+        ):
+            await email_integration.send_message(msg)
 
     async def test_process_incoming_webhook(self, email_integration):
         raw_event = {

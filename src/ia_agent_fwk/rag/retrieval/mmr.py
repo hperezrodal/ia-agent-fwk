@@ -188,10 +188,11 @@ class MMRRetriever(Retriever):
             collector.increment("rag_retrieval_total", labels={"strategy": "mmr", "status": "success"})
             collector.observe("rag_retrieval_duration_seconds", duration_ms / 1000, labels={"strategy": "mmr"})
             collector.observe("rag_retrieval_results_count", len(results), labels={"strategy": "mmr"})
-            return results
         except RetrievalError:
             collector.increment("rag_retrieval_total", labels={"strategy": "mmr", "status": "failure"})
             raise
+        else:
+            return results
 
     # ------------------------------------------------------------------ #
     # Helpers

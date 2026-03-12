@@ -101,16 +101,15 @@ class ListDocumentsTool(Tool):
             msg = f"Documents directory not found: {docs_dir}"
             raise ToolExecutionError(msg, tool_name="list_documents")
 
-        documents: list[DocumentInfo] = []
-        for path in sorted(docs_dir.glob(validated_input.pattern)):
-            if path.is_file() and path.suffix.lower() in _SUPPORTED_EXTENSIONS:
-                documents.append(
-                    DocumentInfo(
-                        filename=path.name,
-                        size_bytes=path.stat().st_size,
-                        extension=path.suffix.lower(),
-                    )
-                )
+        documents: list[DocumentInfo] = [
+            DocumentInfo(
+                filename=path.name,
+                size_bytes=path.stat().st_size,
+                extension=path.suffix.lower(),
+            )
+            for path in sorted(docs_dir.glob(validated_input.pattern))
+            if path.is_file() and path.suffix.lower() in _SUPPORTED_EXTENSIONS
+        ]
 
         return ListDocumentsOutput(
             documents=documents,

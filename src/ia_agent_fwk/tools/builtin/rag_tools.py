@@ -87,16 +87,15 @@ class RAGSearchTool(Tool):
             if results:
                 collector.observe("rag_top_score", results[0].score)
 
-            output = []
-            for r in results:
-                output.append(
-                    {
-                        "content": r.chunk.content,
-                        "source": r.chunk.source,
-                        "score": round(r.score, 4),
-                        "chunk_index": r.chunk.chunk_index,
-                    }
-                )
+            output = [
+                {
+                    "content": r.chunk.content,
+                    "source": r.chunk.source,
+                    "score": round(r.score, 4),
+                    "chunk_index": r.chunk.chunk_index,
+                }
+                for r in results
+            ]
 
             return RAGSearchOutput(results=json.dumps({"results": output}, ensure_ascii=False))
 

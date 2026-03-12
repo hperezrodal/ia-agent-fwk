@@ -2,11 +2,15 @@
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 import pytest
 
-from ia_agent_fwk.memory.backends.conversation import ConversationMemoryBackend
 from ia_agent_fwk.memory.exceptions import MemoryStoreError
 from ia_agent_fwk.memory.models import ConversationInfo, ConversationMessage
+
+if TYPE_CHECKING:
+    from ia_agent_fwk.memory.backends.conversation import ConversationMemoryBackend
 
 
 @pytest.mark.unit
@@ -286,7 +290,7 @@ class TestMemoryBackendInterface:
         await conversation_backend.add_message(conversation_id="conv-1", role="user", content="Test")
         await conversation_backend.clear()
         assert await conversation_backend.get_conversation("conv-1") is None
-        convs, total = await conversation_backend.list_conversations()
+        _convs, total = await conversation_backend.list_conversations()
         assert total == 0
 
     async def test_health_check(self, conversation_backend: ConversationMemoryBackend):

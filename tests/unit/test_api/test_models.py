@@ -23,7 +23,7 @@ class TestApiModels:
         assert req.options is None
 
     def test_agent_run_request_empty_prompt(self):
-        with pytest.raises(Exception):  # noqa: B017
+        with pytest.raises(Exception):  # noqa: B017, PT011
             AgentRunRequest(prompt="")
 
     def test_token_usage_response(self):

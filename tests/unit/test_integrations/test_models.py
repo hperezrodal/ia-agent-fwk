@@ -33,7 +33,7 @@ class TestIncomingMessage:
 
     def test_frozen(self):
         msg = IncomingMessage(channel="slack", sender="U123", content="Hello")
-        with pytest.raises(Exception):  # noqa: B017
+        with pytest.raises(Exception):  # noqa: B017, PT011
             msg.content = "changed"  # type: ignore[misc]
 
 
@@ -57,7 +57,7 @@ class TestOutgoingMessage:
 
     def test_frozen(self):
         msg = OutgoingMessage(channel="slack", recipient="#general", content="Hello")
-        with pytest.raises(Exception):  # noqa: B017
+        with pytest.raises(Exception):  # noqa: B017, PT011
             msg.content = "changed"  # type: ignore[misc]
 
 

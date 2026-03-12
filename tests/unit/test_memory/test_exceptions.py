@@ -31,25 +31,30 @@ class TestMemoryExceptionHierarchy:
         assert issubclass(MemoryRetrieveError, MemoryBackendError)
 
     def test_all_catchable_by_memory_backend_error(self):
+        msg = "test"
         for exc_cls in (MemoryConfigError, MemoryStoreError, MemoryRetrieveError):
             with pytest.raises(MemoryBackendError):
-                raise exc_cls("test")
+                raise exc_cls(msg)
 
 
 @pytest.mark.unit
 class TestExceptionMessages:
     def test_memory_backend_error_message(self):
-        err = MemoryBackendError("something went wrong")
+        msg = "something went wrong"
+        err = MemoryBackendError(msg)
         assert str(err) == "something went wrong"
 
     def test_memory_config_error_message(self):
-        err = MemoryConfigError("bad config")
+        msg = "bad config"
+        err = MemoryConfigError(msg)
         assert str(err) == "bad config"
 
     def test_memory_store_error_message(self):
-        err = MemoryStoreError("store failed")
+        msg = "store failed"
+        err = MemoryStoreError(msg)
         assert str(err) == "store failed"
 
     def test_memory_retrieve_error_message(self):
-        err = MemoryRetrieveError("retrieve failed")
+        msg = "retrieve failed"
+        err = MemoryRetrieveError(msg)
         assert str(err) == "retrieve failed"

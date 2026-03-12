@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
 
@@ -15,6 +15,9 @@ from ia_agent_fwk.tools.builtin.calendar_models import (
     PendingConfirmation,
     UserCorrection,
 )
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 @pytest.mark.unit
@@ -51,7 +54,7 @@ class TestExtractedEvent:
 
     def test_frozen(self):
         event = ExtractedEvent(title="Test")
-        with pytest.raises(Exception):  # noqa: B017
+        with pytest.raises(Exception):  # noqa: B017, PT011
             event.title = "Changed"  # type: ignore[misc]
 
 

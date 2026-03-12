@@ -52,9 +52,11 @@ class TestTracingManager:
         """OTLP exporter raises TracingConfigError when dependency is missing."""
         settings = TracingSettings(enabled=True, exporter="otlp")
         manager = TracingManager(settings)
-        with patch.dict("sys.modules", {"opentelemetry.exporter.otlp.proto.grpc.trace_exporter": None}):
-            with pytest.raises(TracingConfigError, match="opentelemetry-exporter-otlp"):
-                manager.setup()
+        with (
+            patch.dict("sys.modules", {"opentelemetry.exporter.otlp.proto.grpc.trace_exporter": None}),
+            pytest.raises(TracingConfigError, match="opentelemetry-exporter-otlp"),
+        ):
+            manager.setup()
 
 
 @pytest.mark.unit

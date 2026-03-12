@@ -39,7 +39,7 @@ class TestAuditEventModel:
             action="read",
             result="success",
         )
-        with pytest.raises(Exception):  # noqa: B017
+        with pytest.raises(Exception):  # noqa: B017, PT011
             event.actor = "modified"  # type: ignore[misc]
 
     def test_audit_event_with_metadata(self):

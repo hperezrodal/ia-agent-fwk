@@ -154,7 +154,7 @@ class TestWhatsAppIntegration:
     def test_verify_webhook_success(self, whatsapp_integration):
         result = whatsapp_integration.verify_webhook(
             mode="subscribe",
-            token="test-verify-token",
+            token="test-verify-token",  # noqa: S106
             challenge="challenge-123",
         )
         assert result == "challenge-123"
@@ -162,7 +162,7 @@ class TestWhatsAppIntegration:
     def test_verify_webhook_wrong_mode(self, whatsapp_integration):
         result = whatsapp_integration.verify_webhook(
             mode="unsubscribe",
-            token="test-verify-token",
+            token="test-verify-token",  # noqa: S106
             challenge="challenge-123",
         )
         assert result is None
@@ -170,7 +170,7 @@ class TestWhatsAppIntegration:
     def test_verify_webhook_wrong_token(self, whatsapp_integration):
         result = whatsapp_integration.verify_webhook(
             mode="subscribe",
-            token="wrong-token",
+            token="wrong-token",  # noqa: S106
             challenge="challenge-123",
         )
         assert result is None

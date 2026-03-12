@@ -151,11 +151,10 @@ class OllamaProvider(LLMProvider):
                 collector.observe(
                     "llm_request_duration_seconds", duration_ms / 1000, labels={"provider": "ollama", "model": model}
                 )
-                logger.error(
-                    "Ollama chat failed: model=%s (%.1fms) - %s",
+                logger.exception(
+                    "Ollama chat failed: model=%s (%.1fms)",
                     model,
                     duration_ms,
-                    exc,
                     extra={
                         "llm_data": {
                             "event": "chat_error",

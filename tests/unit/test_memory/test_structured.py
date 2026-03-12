@@ -48,7 +48,7 @@ class TestStructuredMemoryBackend:
     @patch("ia_agent_fwk.memory.backends.structured.asyncpg")
     async def test_store_and_retrieve(self, mock_asyncpg):
         backend = _make_backend()
-        mock_pool, mock_conn = _setup_mock_pool(mock_asyncpg)
+        _mock_pool, mock_conn = _setup_mock_pool(mock_asyncpg)
 
         mock_conn.execute = AsyncMock(return_value="INSERT 0 1")
         await backend.store("key1", "hello world")
@@ -57,7 +57,7 @@ class TestStructuredMemoryBackend:
     @patch("ia_agent_fwk.memory.backends.structured.asyncpg")
     async def test_store_upsert(self, mock_asyncpg):
         backend = _make_backend()
-        mock_pool, mock_conn = _setup_mock_pool(mock_asyncpg)
+        _mock_pool, mock_conn = _setup_mock_pool(mock_asyncpg)
 
         mock_conn.execute = AsyncMock(return_value="INSERT 0 1")
         await backend.store("key1", "value1")
@@ -69,7 +69,7 @@ class TestStructuredMemoryBackend:
     @patch("ia_agent_fwk.memory.backends.structured.asyncpg")
     async def test_retrieve_existing(self, mock_asyncpg):
         backend = _make_backend()
-        mock_pool, mock_conn = _setup_mock_pool(mock_asyncpg)
+        _mock_pool, mock_conn = _setup_mock_pool(mock_asyncpg)
 
         mock_conn.fetchrow = AsyncMock(return_value={"value": '"hello world"'})
         result = await backend.retrieve("key1")
@@ -78,7 +78,7 @@ class TestStructuredMemoryBackend:
     @patch("ia_agent_fwk.memory.backends.structured.asyncpg")
     async def test_retrieve_nonexistent(self, mock_asyncpg):
         backend = _make_backend()
-        mock_pool, mock_conn = _setup_mock_pool(mock_asyncpg)
+        _mock_pool, mock_conn = _setup_mock_pool(mock_asyncpg)
 
         mock_conn.fetchrow = AsyncMock(return_value=None)
         result = await backend.retrieve("nonexistent")
@@ -87,7 +87,7 @@ class TestStructuredMemoryBackend:
     @patch("ia_agent_fwk.memory.backends.structured.asyncpg")
     async def test_retrieve_json_value(self, mock_asyncpg):
         backend = _make_backend()
-        mock_pool, mock_conn = _setup_mock_pool(mock_asyncpg)
+        _mock_pool, mock_conn = _setup_mock_pool(mock_asyncpg)
 
         complex_value = {"name": "test", "data": [1, 2, 3]}
         mock_conn.fetchrow = AsyncMock(return_value={"value": json.dumps(complex_value)})
@@ -97,7 +97,7 @@ class TestStructuredMemoryBackend:
     @patch("ia_agent_fwk.memory.backends.structured.asyncpg")
     async def test_search_substring(self, mock_asyncpg):
         backend = _make_backend()
-        mock_pool, mock_conn = _setup_mock_pool(mock_asyncpg)
+        _mock_pool, mock_conn = _setup_mock_pool(mock_asyncpg)
 
         mock_conn.fetch = AsyncMock(
             return_value=[
@@ -112,7 +112,7 @@ class TestStructuredMemoryBackend:
     @patch("ia_agent_fwk.memory.backends.structured.asyncpg")
     async def test_delete_existing(self, mock_asyncpg):
         backend = _make_backend()
-        mock_pool, mock_conn = _setup_mock_pool(mock_asyncpg)
+        _mock_pool, mock_conn = _setup_mock_pool(mock_asyncpg)
 
         mock_conn.execute = AsyncMock(return_value="DELETE 1")
         result = await backend.delete("key1")
@@ -121,7 +121,7 @@ class TestStructuredMemoryBackend:
     @patch("ia_agent_fwk.memory.backends.structured.asyncpg")
     async def test_delete_nonexistent(self, mock_asyncpg):
         backend = _make_backend()
-        mock_pool, mock_conn = _setup_mock_pool(mock_asyncpg)
+        _mock_pool, mock_conn = _setup_mock_pool(mock_asyncpg)
 
         mock_conn.execute = AsyncMock(return_value="DELETE 0")
         result = await backend.delete("nonexistent")
@@ -130,7 +130,7 @@ class TestStructuredMemoryBackend:
     @patch("ia_agent_fwk.memory.backends.structured.asyncpg")
     async def test_clear(self, mock_asyncpg):
         backend = _make_backend()
-        mock_pool, mock_conn = _setup_mock_pool(mock_asyncpg)
+        _mock_pool, mock_conn = _setup_mock_pool(mock_asyncpg)
 
         await backend.clear()
         assert mock_conn.execute.await_count > 0
@@ -138,7 +138,7 @@ class TestStructuredMemoryBackend:
     @patch("ia_agent_fwk.memory.backends.structured.asyncpg")
     async def test_store_with_ttl(self, mock_asyncpg):
         backend = _make_backend()
-        mock_pool, mock_conn = _setup_mock_pool(mock_asyncpg)
+        _mock_pool, mock_conn = _setup_mock_pool(mock_asyncpg)
 
         mock_conn.execute = AsyncMock(return_value="INSERT 0 1")
         await backend.store("key1", "value1", metadata={"ttl_seconds": 3600})
@@ -148,7 +148,7 @@ class TestStructuredMemoryBackend:
     @patch("ia_agent_fwk.memory.backends.structured.asyncpg")
     async def test_store_with_default_ttl(self, mock_asyncpg):
         backend = _make_backend(default_ttl_seconds=300)
-        mock_pool, mock_conn = _setup_mock_pool(mock_asyncpg)
+        _mock_pool, mock_conn = _setup_mock_pool(mock_asyncpg)
 
         mock_conn.execute = AsyncMock(return_value="INSERT 0 1")
         await backend.store("key1", "value1")
@@ -157,7 +157,7 @@ class TestStructuredMemoryBackend:
     @patch("ia_agent_fwk.memory.backends.structured.asyncpg")
     async def test_health_check(self, mock_asyncpg):
         backend = _make_backend()
-        mock_pool, mock_conn = _setup_mock_pool(mock_asyncpg)
+        _mock_pool, _mock_conn = _setup_mock_pool(mock_asyncpg)
 
         result = await backend.health_check()
         assert result is True
@@ -165,7 +165,7 @@ class TestStructuredMemoryBackend:
     @patch("ia_agent_fwk.memory.backends.structured.asyncpg")
     async def test_close(self, mock_asyncpg):
         backend = _make_backend()
-        mock_pool, mock_conn = _setup_mock_pool(mock_asyncpg)
+        mock_pool, _mock_conn = _setup_mock_pool(mock_asyncpg)
 
         # Initialize the pool
         await backend.health_check()
@@ -175,7 +175,7 @@ class TestStructuredMemoryBackend:
     @patch("ia_agent_fwk.memory.backends.structured.asyncpg")
     async def test_table_autocreation(self, mock_asyncpg):
         backend = _make_backend()
-        mock_pool, mock_conn = _setup_mock_pool(mock_asyncpg)
+        _mock_pool, mock_conn = _setup_mock_pool(mock_asyncpg)
 
         mock_conn.fetchrow = AsyncMock(return_value=None)
         await backend.retrieve("key1")

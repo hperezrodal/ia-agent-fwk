@@ -113,7 +113,8 @@ class TestBuiltinToolRegistration:
         registry = ToolRegistry()
         register_builtin_tools(registry)
 
-        # Should have 24 built-in tools (7 core + 4 support + 4 document + 2 doc loader + 4 finance + 1 rag + 2 calendar)
+        # Should have 24 built-in tools
+        # (7 core + 4 support + 4 document + 2 doc loader + 4 finance + 1 rag + 2 calendar)
         tools = registry.list()
         assert len(tools) == 24
 

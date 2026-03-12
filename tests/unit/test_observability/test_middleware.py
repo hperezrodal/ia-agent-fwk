@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 import pytest
 from starlette.applications import Starlette
-from starlette.requests import Request
 from starlette.responses import JSONResponse, PlainTextResponse
 from starlette.routing import Route
 from starlette.testclient import TestClient
@@ -12,12 +13,15 @@ from starlette.testclient import TestClient
 from ia_agent_fwk.observability.metrics import get_metrics_collector
 from ia_agent_fwk.observability.middleware import ObservabilityMiddleware
 
+if TYPE_CHECKING:
+    from starlette.requests import Request
 
-def _home(request: Request) -> PlainTextResponse:
+
+def _home(_request: Request) -> PlainTextResponse:
     return PlainTextResponse("OK")
 
 
-def _error(request: Request) -> JSONResponse:
+def _error(_request: Request) -> JSONResponse:
     return JSONResponse({"error": "bad"}, status_code=500)
 
 

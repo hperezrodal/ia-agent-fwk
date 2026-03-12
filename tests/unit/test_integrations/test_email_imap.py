@@ -17,7 +17,7 @@ from ia_agent_fwk.integrations.exceptions import ChannelConnectionError
 # ---------------------------------------------------------------------------
 
 
-def _make_raw_email(
+def _make_raw_email(  # noqa: PLR0913
     subject: str = "Test Subject",
     from_addr: str = "sender@test.com",
     to_addr: str = "inbox@test.com",
@@ -63,7 +63,7 @@ def _make_mock_imap(
     mock_imap.search = AsyncMock(return_value=search_resp)
 
     # fetch response (sequence number based)
-    def fetch_handler(seq_num, *args):
+    def fetch_handler(seq_num, *_args):
         if raw_emails and seq_num in raw_emails:
             resp = MagicMock()
             resp.result = "OK"
@@ -77,7 +77,7 @@ def _make_mock_imap(
     mock_imap.fetch = AsyncMock(side_effect=fetch_handler)
 
     # uid store response (for mark_as_read)
-    def uid_handler(cmd, uid_val, *args):
+    def uid_handler(cmd, _uid_val, *_args):
         if cmd == "store":
             resp = MagicMock()
             resp.result = "OK"
@@ -121,13 +121,13 @@ class TestEmailImapInit:
             imap_host="imap.custom.com",
             imap_port=143,
             imap_username="imap@custom.com",
-            imap_password="imap-pass",
+            imap_password="imap-pass",  # noqa: S106
             imap_use_ssl=False,
         )
         assert ei._imap_host == "imap.custom.com"
         assert ei._imap_port == 143
         assert ei._imap_username == "imap@custom.com"
-        assert ei._imap_password == "imap-pass"
+        assert ei._imap_password == "imap-pass"  # noqa: S105
         assert ei._imap_use_ssl is False
 
 
