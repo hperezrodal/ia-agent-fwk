@@ -43,7 +43,7 @@ def _html_to_text(html: str) -> str:
         converter.ignore_links = False
         converter.ignore_images = True
         converter.body_width = 0
-        return converter.handle(html)
+        return str(converter.handle(html))
     except ImportError:
         # Fallback: strip tags with regex
         text = re.sub(r"<[^>]+>", " ", html)
@@ -550,7 +550,7 @@ class DuplicateCheckerTool(Tool):
 def _has_google_libs() -> bool:
     """Check whether Google API client libraries are importable."""
     try:
-        import google.auth  # noqa: F401, PLC0415
+        import google.auth  # noqa: F401, PLC0415  # type: ignore[import-untyped]
         import googleapiclient.discovery  # noqa: F401, PLC0415
 
     except ImportError:
@@ -660,7 +660,7 @@ class GoogleCalendarTool(Tool):
 
         creds: Credentials | None = None
         if self._token_path and self._token_path.exists():
-            creds = Credentials.from_authorized_user_file(  # type: ignore[no-untyped-call]
+            creds = Credentials.from_authorized_user_file(
                 str(self._token_path),
                 scopes=["https://www.googleapis.com/auth/calendar"],
             )
@@ -672,7 +672,7 @@ class GoogleCalendarTool(Tool):
         if creds.expired and creds.refresh_token:
             creds.refresh(Request())
             if self._token_path:
-                self._token_path.write_text(creds.to_json())  # type: ignore[no-untyped-call]
+                self._token_path.write_text(creds.to_json())
 
         self._service = build("calendar", "v3", credentials=creds)
         return self._service

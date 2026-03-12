@@ -49,6 +49,7 @@ dev = [
     "pytest-cov>=6.0",
     "pytest-asyncio>=0.24.0",
     "types-PyYAML>=6.0",
+    "pre-commit>=4.0",
 ]
 huggingface = [
     "transformers>=4.36",
@@ -245,6 +246,10 @@ ignore_missing_imports = true
 [[tool.mypy.overrides]]
 module = "google_auth_oauthlib.*"
 ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "ia_agent_fwk.tools.builtin.calendar_tools"
+disallow_untyped_calls = false
 
 [[tool.mypy.overrides]]
 module = "transformers"
