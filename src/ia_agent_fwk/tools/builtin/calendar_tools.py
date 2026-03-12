@@ -550,7 +550,7 @@ class DuplicateCheckerTool(Tool):
 def _has_google_libs() -> bool:
     """Check whether Google API client libraries are importable."""
     try:
-        import google.auth  # noqa: F401, PLC0415  # type: ignore[import-untyped]
+        import google.auth  # noqa: F401, PLC0415
         import googleapiclient.discovery  # noqa: F401, PLC0415
 
     except ImportError:
