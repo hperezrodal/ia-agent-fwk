@@ -98,7 +98,7 @@ def build_workflow(
         failure_policy = FailurePolicy(failure_policy_str)
         max_concurrency = definition.config.get("max_concurrency")
 
-        orchestrator = ParallelWorkflow(
+        orchestrator = ParallelWorkflow(  # type: ignore[assignment]
             steps=steps,
             agent_factory=agent_factory,
             failure_policy=failure_policy,
@@ -138,7 +138,7 @@ def build_workflow(
             else:
                 routes[route_key] = step
 
-        orchestrator = ConditionalWorkflow(
+        orchestrator = ConditionalWorkflow(  # type: ignore[assignment]
             router=router,
             routes=routes,
             agent_factory=agent_factory,

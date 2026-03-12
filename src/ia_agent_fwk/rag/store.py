@@ -108,7 +108,7 @@ class RAGStore:
         """Search for relevant chunks by semantic similarity."""
         collector = get_metrics_collector()
         t0 = time.monotonic()
-        results = await self._backend.search(
+        results = await self._backend.search(  # type: ignore[call-arg]
             query=query,
             top_k=top_k,
             metadata_filter=metadata_filter,
@@ -124,7 +124,7 @@ class RAGStore:
         Returns the number of chunks deleted.
         """
         # Search for all chunks with this document_id
-        results = await self._backend.search(
+        results = await self._backend.search(  # type: ignore[call-arg]
             query="",
             top_k=1000,
             metadata_filter={"document_id": document_id},

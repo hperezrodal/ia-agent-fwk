@@ -211,7 +211,7 @@ class OllamaProvider(LLMProvider):
                         }
                     },
                 )
-                return result
+                return result  # type: ignore[no-any-return]
 
     async def complete(self, prompt: str, **kwargs: Any) -> CompletionResponse:
         collector = get_metrics_collector()
@@ -302,7 +302,7 @@ class OllamaProvider(LLMProvider):
                     result.usage.completion_tokens,
                     labels={"provider": "ollama", "model": result.model},
                 )
-                return result
+                return result  # type: ignore[no-any-return]
 
     async def stream(self, messages: list[Message], **kwargs: Any) -> AsyncIterator[StreamChunk]:
         # Copy kwargs to avoid mutation.

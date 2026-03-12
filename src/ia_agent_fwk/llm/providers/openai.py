@@ -226,7 +226,7 @@ class OpenAIProvider(LLMProvider):
                         }
                     },
                 )
-                return result
+                return result  # type: ignore[no-any-return]
 
     async def complete(self, prompt: str, **kwargs: Any) -> CompletionResponse:
         response = await self.chat(

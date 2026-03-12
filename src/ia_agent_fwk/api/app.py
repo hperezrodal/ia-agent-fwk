@@ -81,7 +81,7 @@ def _register_example_agents() -> None:
         ("document_processor", _DocumentProcessorAgent),
         ("finance", _FinanceAgent),
     ]:
-        AgentRegistry.register(name, cls, replace=True)
+        AgentRegistry.register(name, cls, replace=True)  # type: ignore[type-abstract]
 
 
 @asynccontextmanager

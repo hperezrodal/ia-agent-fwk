@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 from fastapi import APIRouter
 from starlette.responses import Response
 
@@ -12,12 +14,12 @@ router = APIRouter(tags=["observability"])
 _CONTENT_TYPE = "text/plain; version=0.0.4; charset=utf-8"
 
 
-def _format_prometheus(snapshot: dict) -> str:
+def _format_prometheus(snapshot: dict[str, Any]) -> str:
     """Convert MetricsCollector snapshot to Prometheus text exposition format."""
     lines: list[str] = []
 
     # --- Counters ---
-    counters: dict = snapshot.get("counters", {})
+    counters: dict[str, Any] = snapshot.get("counters", {})
     for name, buckets in sorted(counters.items()):
         lines.append(f"# HELP {name} Counter metric.")
         lines.append(f"# TYPE {name} counter")
@@ -31,7 +33,7 @@ def _format_prometheus(snapshot: dict) -> str:
                 lines.append(f"{name} {value}")
 
     # --- Histograms ---
-    histograms: dict = snapshot.get("histograms", {})
+    histograms: dict[str, Any] = snapshot.get("histograms", {})
     # Group labeled histograms by base name for proper HELP/TYPE headers
     seen_histogram_names: set[str] = set()
     for composite_name, stats in sorted(histograms.items()):

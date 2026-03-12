@@ -660,7 +660,7 @@ class GoogleCalendarTool(Tool):
 
         creds: Credentials | None = None
         if self._token_path and self._token_path.exists():
-            creds = Credentials.from_authorized_user_file(
+            creds = Credentials.from_authorized_user_file(  # type: ignore[no-untyped-call]
                 str(self._token_path),
                 scopes=["https://www.googleapis.com/auth/calendar"],
             )
@@ -672,7 +672,7 @@ class GoogleCalendarTool(Tool):
         if creds.expired and creds.refresh_token:
             creds.refresh(Request())
             if self._token_path:
-                self._token_path.write_text(creds.to_json())
+                self._token_path.write_text(creds.to_json())  # type: ignore[no-untyped-call]
 
         self._service = build("calendar", "v3", credentials=creds)
         return self._service
