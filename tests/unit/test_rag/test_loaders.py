@@ -54,6 +54,10 @@ class TestMarkdownLoader:
 class TestPDFLoader:
     """F-016: PDFLoader unit tests."""
 
+    @pytest.fixture(autouse=True)
+    def _require_pypdf(self):
+        pytest.importorskip("pypdf", reason="pypdf not installed")
+
     async def test_pdf_loader_loads_valid_pdf(self, tmp_path: Path):
         pdf_path = tmp_path / "test.pdf"
 
@@ -137,6 +141,10 @@ class TestPDFLoader:
 
 @pytest.mark.unit
 class TestHTMLLoader:
+    @pytest.fixture(autouse=True)
+    def _require_bs4(self):
+        pytest.importorskip("bs4", reason="beautifulsoup4 not installed")
+
     async def test_html_loader_extracts_text(self, tmp_html_file: Path):
         from ia_agent_fwk.rag.loaders.html import HTMLLoader
 

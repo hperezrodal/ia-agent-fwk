@@ -28,8 +28,9 @@ if TYPE_CHECKING:
 class TestAppSettings:
     """Verify Pydantic Settings model defaults and env var support."""
 
-    def test_default_settings_instantiation(self):
+    def test_default_settings_instantiation(self, monkeypatch: pytest.MonkeyPatch):
         """AppSettings() creates a valid instance with all defaults."""
+        monkeypatch.delenv("IAFWK_APP__ENVIRONMENT", raising=False)
         settings = AppSettings()
         assert settings.app.name == "ia-agent-fwk"
         assert settings.app.version == "0.1.0"
@@ -247,8 +248,9 @@ class TestLoadConfig:
 class TestSemanticValidation:
     """Verify semantic validation for production constraints."""
 
-    def test_production_debug_true_raises(self, tmp_path: Path):
+    def test_production_debug_true_raises(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
         """Production profile with debug=true raises ValueError."""
+        monkeypatch.delenv("IAFWK_APP__ENVIRONMENT", raising=False)
         config_dir = tmp_path / "config"
         config_dir.mkdir()
         (config_dir / "default.yaml").write_text(
@@ -263,8 +265,9 @@ class TestSemanticValidation:
         with pytest.raises(ValueError, match=r"app\.debug must be False in production"):
             load_config(environment="production", config_dir=config_dir)
 
-    def test_production_auth_disabled_raises(self, tmp_path: Path):
+    def test_production_auth_disabled_raises(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
         """Production profile with auth disabled raises ValueError."""
+        monkeypatch.delenv("IAFWK_APP__ENVIRONMENT", raising=False)
         config_dir = tmp_path / "config"
         config_dir.mkdir()
         (config_dir / "default.yaml").write_text(
@@ -279,8 +282,9 @@ class TestSemanticValidation:
         with pytest.raises(ValueError, match=r"auth\.enabled must be True in production"):
             load_config(environment="production", config_dir=config_dir)
 
-    def test_production_jwt_enabled_without_secret_raises(self, tmp_path: Path):
+    def test_production_jwt_enabled_without_secret_raises(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
         """Production with JWT enabled but no secret raises ValueError."""
+        monkeypatch.delenv("IAFWK_APP__ENVIRONMENT", raising=False)
         config_dir = tmp_path / "config"
         config_dir.mkdir()
         (config_dir / "default.yaml").write_text(
