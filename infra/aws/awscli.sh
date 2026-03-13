@@ -38,10 +38,11 @@ if [ -t 0 ]; then
     DOCKER_ARGS+=(-it)
 fi
 
-# Pass AWS env vars
+# Pass AWS env vars (strip CR and other control chars to avoid "invalid XML character" in API requests)
 for var in AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN AWS_DEFAULT_REGION AWS_PROFILE; do
     if [ -n "${!var:-}" ]; then
-        DOCKER_ARGS+=(-e "$var")
+        val=$(printf '%s' "${!var}" | tr -d '\r' | tr -d '[:cntrl:]')
+        DOCKER_ARGS+=(-e "$var=$val")
     fi
 done
 

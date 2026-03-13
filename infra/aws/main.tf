@@ -98,6 +98,24 @@ resource "aws_security_group" "llm_server" {
     cidr_blocks = var.allowed_api_cidrs
   }
 
+  # Grafana
+  ingress {
+    description = "Grafana dashboards"
+    from_port   = 3000
+    to_port     = 3000
+    protocol    = "tcp"
+    cidr_blocks = var.allowed_api_cidrs
+  }
+
+  # Prometheus
+  ingress {
+    description = "Prometheus metrics"
+    from_port   = 9090
+    to_port     = 9090
+    protocol    = "tcp"
+    cidr_blocks = var.allowed_api_cidrs
+  }
+
   # Outbound — allow all
   egress {
     from_port   = 0
@@ -151,9 +169,6 @@ resource "aws_instance" "llm_server" {
   user_data = base64encode(templatefile("${path.module}/user_data.sh", {
     ollama_models = join(" ", var.ollama_models)
   }))
-
-  # Allow instance to be stopped/started (spot persistent)
-  instance_initiated_shutdown_behavior = "stop"
 
   tags = {
     Name = "${var.project_name}-llm-${var.environment}"
