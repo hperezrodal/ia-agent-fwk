@@ -1,0 +1,40 @@
+---
+# ─────────────────────────────────────────────────────────────
+# Update: git pull + rebuild containers
+#
+# Usage:
+#   ./ansible.sh ansible-playbook playbooks/update.yml
+# ─────────────────────────────────────────────────────────────
+- name: Update ia-agent-fwk
+  hosts: gpu_instances
+  become: true
+
+  tasks:
+    - name: Pull latest code
+      ansible.builtin.git:
+        repo: "{{ app_repo }}"
+        dest: "{{ app_dir }}"
+        version: "{{ app_branch }}"
+        force: false
+      become: false
+
+    - name: Rebuild and restart containers
+      ansible.builtin.command:
+        cmd: "docker compose -f {{ compose_file }} up -d --build"
+        chdir: "{{ app_dir }}"
+      register: compose_update
+      changed_when: "'Created' in compose_update.stderr or 'Recreated' in compose_update.stderr"
+
+    - name: Wait for API to be healthy
+      ansible.builtin.uri:
+        url: "http://localhost:8000/health"
+        method: GET
+        status_code: 200
+      register: api_health
+      until: api_health.status == 200
+      retries: 20
+      delay: 10
+
+    - name: Display update status
+      ansible.builtin.debug:
+        msg: "Update complete. API healthy at http://{{ ansible_host }}:8000"

@@ -1,0 +1,5 @@
+---
+- name: restart compose
+  ansible.builtin.command:
+    cmd: "docker compose -f {{ compose_file }} up -d --build"
+    chdir: "{{ app_dir }}"

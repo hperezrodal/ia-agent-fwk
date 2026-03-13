@@ -1,0 +1,22 @@
+---
+# ─────────────────────────────────────────────────────────────
+# Full deployment: common + ollama + app
+#
+# Usage:
+#   ./ansible.sh ansible-playbook playbooks/deploy.yml
+#   ./ansible.sh ansible-playbook playbooks/deploy.yml --tags ollama
+#   ./ansible.sh ansible-playbook playbooks/deploy.yml --tags app
+# ─────────────────────────────────────────────────────────────
+- name: Deploy ia-agent-fwk on GPU instance
+  hosts: gpu_instances
+  become: true
+
+  roles:
+    - role: common
+      tags: [common]
+
+    - role: ollama
+      tags: [ollama]
+
+    - role: app
+      tags: [app]

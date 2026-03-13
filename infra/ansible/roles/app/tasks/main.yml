@@ -1,0 +1,104 @@
+---
+# ─────────────────────────────────────────────────────────────
+# Role: app — Clone repo, configure, Compose up
+# ─────────────────────────────────────────────────────────────
+
+# ── Clone / update repository ───────────────────────────────
+
+- name: Clone application repository
+  ansible.builtin.git:
+    repo: "{{ app_repo }}"
+    dest: "{{ app_dir }}"
+    version: "{{ app_branch }}"
+    force: false
+  become: false
+
+# ── Generate .env file ──────────────────────────────────────
+
+- name: Generate application .env file
+  ansible.builtin.template:
+    src: env.j2
+    dest: "{{ app_dir }}/.env"
+    mode: "0600"
+    owner: ubuntu
+    group: ubuntu
+  notify: restart compose
+
+# ── Create documents directory ──────────────────────────────
+
+- name: Ensure documents directory exists
+  ansible.builtin.file:
+    path: "{{ app_dir }}/documents"
+    state: directory
+    mode: "0755"
+    owner: ubuntu
+    group: ubuntu
+
+# ── Docker Compose ──────────────────────────────────────────
+
+- name: Build and start application stack
+  ansible.builtin.command:
+    cmd: "docker compose -f {{ compose_file }} up -d --build"
+    chdir: "{{ app_dir }}"
+  register: compose_up
+  changed_when: "'Created' in compose_up.stderr or 'Recreated' in compose_up.stderr"
+
+# ── Health checks ───────────────────────────────────────────
+
+- name: Wait for API to be healthy
+  ansible.builtin.uri:
+    url: "http://localhost:8000/health"
+    method: GET
+    status_code: 200
+  register: api_health
+  until: api_health.status == 200
+  retries: 20
+  delay: 10
+
+- name: Display API health status
+  ansible.builtin.debug:
+    msg: "API is healthy at http://{{ ansible_host }}:8000"
+
+- name: Check Grafana health
+  ansible.builtin.uri:
+    url: "http://localhost:3000/api/health"
+    method: GET
+    status_code: 200
+  register: grafana_health
+  until: grafana_health.status == 200
+  retries: 15
+  delay: 10
+  failed_when: false
+
+- name: Display Grafana status
+  ansible.builtin.debug:
+    msg: "Grafana is available at http://{{ ansible_host }}:3000"
+  when: grafana_health.status == 200
+
+- name: Check Prometheus health
+  ansible.builtin.uri:
+    url: "http://localhost:9090/-/healthy"
+    method: GET
+    status_code: 200
+  register: prometheus_health
+  until: prometheus_health.status == 200
+  retries: 15
+  delay: 10
+  failed_when: false
+
+- name: Display Prometheus status
+  ansible.builtin.debug:
+    msg: "Prometheus is available at http://{{ ansible_host }}:9090"
+  when: prometheus_health.status == 200
+
+- name: Display stack summary
+  ansible.builtin.debug:
+    msg:
+      - "============================================"
+      - "  Deployment complete!"
+      - "============================================"
+      - "  API:        http://{{ ansible_host }}:8000"
+      - "  Grafana:    http://{{ ansible_host }}:3000"
+      - "  Prometheus: http://{{ ansible_host }}:9090"
+      - "  Ollama:     http://{{ ansible_host }}:11434"
+      - "============================================"

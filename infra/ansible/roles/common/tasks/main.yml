@@ -1,0 +1,128 @@
+---
+# ─────────────────────────────────────────────────────────────
+# Role: common — Docker, NVIDIA Container Toolkit, swap
+# ─────────────────────────────────────────────────────────────
+
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Install prerequisite packages
+  ansible.builtin.apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg
+      - lsb-release
+      - git
+      - jq
+    state: present
+
+# ── Docker ──────────────────────────────────────────────────
+
+- name: Check if Docker is installed
+  ansible.builtin.command: docker --version
+  register: docker_check
+  changed_when: false
+  failed_when: false
+
+- name: Install Docker via get.docker.com
+  ansible.builtin.shell: curl -fsSL https://get.docker.com | sh
+  when: docker_check.rc != 0
+  notify: restart docker
+
+- name: Add ubuntu user to docker group
+  ansible.builtin.user:
+    name: ubuntu
+    groups: docker
+    append: true
+
+- name: Ensure Docker is enabled and running
+  ansible.builtin.systemd:
+    name: docker
+    enabled: true
+    state: started
+
+# ── Docker Compose plugin ──────────────────────────────────
+
+- name: Check if Docker Compose plugin is installed
+  ansible.builtin.command: docker compose version
+  register: compose_check
+  changed_when: false
+  failed_when: false
+
+- name: Install Docker Compose plugin
+  ansible.builtin.apt:
+    name: docker-compose-plugin
+    state: present
+  when: compose_check.rc != 0
+
+# ── NVIDIA Container Toolkit ───────────────────────────────
+
+- name: Check if NVIDIA Container Toolkit is installed
+  ansible.builtin.command: dpkg -l nvidia-container-toolkit
+  register: nvidia_toolkit_check
+  changed_when: false
+  failed_when: false
+
+- name: Add NVIDIA Container Toolkit GPG key
+  ansible.builtin.shell: |
+    curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey \
+      | gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
+  args:
+    creates: /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
+  when: nvidia_toolkit_check.rc != 0
+
+- name: Add NVIDIA Container Toolkit repository
+  ansible.builtin.shell: |
+    curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list \
+      | sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' \
+      | tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
+  args:
+    creates: /etc/apt/sources.list.d/nvidia-container-toolkit.list
+  when: nvidia_toolkit_check.rc != 0
+
+- name: Install NVIDIA Container Toolkit
+  ansible.builtin.apt:
+    name: nvidia-container-toolkit
+    state: present
+    update_cache: true
+  when: nvidia_toolkit_check.rc != 0
+
+- name: Configure NVIDIA runtime for Docker
+  ansible.builtin.command: nvidia-ctk runtime configure --runtime=docker
+  when: nvidia_toolkit_check.rc != 0
+  notify: restart docker
+
+# ── Swap ────────────────────────────────────────────────────
+
+- name: Check if swap file exists
+  ansible.builtin.stat:
+    path: /swapfile
+  register: swap_file
+
+- name: Create swap file
+  ansible.builtin.command: "fallocate -l {{ swap_size_mb }}M /swapfile"
+  when: not swap_file.stat.exists
+
+- name: Set swap file permissions
+  ansible.builtin.file:
+    path: /swapfile
+    mode: "0600"
+  when: not swap_file.stat.exists
+
+- name: Make swap
+  ansible.builtin.command: mkswap /swapfile
+  when: not swap_file.stat.exists
+
+- name: Enable swap
+  ansible.builtin.command: swapon /swapfile
+  when: not swap_file.stat.exists
+
+- name: Add swap to fstab
+  ansible.builtin.lineinfile:
+    path: /etc/fstab
+    line: "/swapfile none swap sw 0 0"
+    state: present

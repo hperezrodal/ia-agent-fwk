@@ -1,0 +1,40 @@
+---
+# ─────────────────────────────────────────────────────────────
+# Teardown: stop and remove containers + volumes
+#
+# Usage:
+#   ./ansible.sh ansible-playbook playbooks/teardown.yml
+#   ./ansible.sh ansible-playbook playbooks/teardown.yml -e keep_volumes=true
+# ─────────────────────────────────────────────────────────────
+- name: Teardown ia-agent-fwk
+  hosts: gpu_instances
+  become: true
+
+  vars:
+    keep_volumes: false
+
+  tasks:
+    - name: Check if compose file exists
+      ansible.builtin.stat:
+        path: "{{ app_dir }}/{{ compose_file }}"
+      register: compose_exists
+
+    - name: Stop and remove containers (keep volumes)
+      ansible.builtin.command:
+        cmd: "docker compose -f {{ compose_file }} down"
+        chdir: "{{ app_dir }}"
+      when: compose_exists.stat.exists and keep_volumes | bool
+
+    - name: Stop and remove containers and volumes
+      ansible.builtin.command:
+        cmd: "docker compose -f {{ compose_file }} down -v"
+        chdir: "{{ app_dir }}"
+      when: compose_exists.stat.exists and not (keep_volumes | bool)
+
+    - name: Prune unused Docker images
+      ansible.builtin.command: docker image prune -f
+      changed_when: false
+
+    - name: Display teardown status
+      ansible.builtin.debug:
+        msg: "Teardown complete. Ollama is still running natively."

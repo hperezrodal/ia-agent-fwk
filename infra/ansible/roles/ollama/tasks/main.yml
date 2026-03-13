@@ -1,0 +1,84 @@
+---
+# ─────────────────────────────────────────────────────────────
+# Role: ollama — Install, configure systemd, pull models
+# ─────────────────────────────────────────────────────────────
+
+- name: Check if Ollama is installed
+  ansible.builtin.command: ollama --version
+  register: ollama_check
+  changed_when: false
+  failed_when: false
+
+- name: Install Ollama
+  ansible.builtin.shell: curl -fsSL https://ollama.com/install.sh | sh
+  when: ollama_check.rc != 0
+
+# ── Systemd configuration ──────────────────────────────────
+
+- name: Create Ollama systemd override directory
+  ansible.builtin.file:
+    path: /etc/systemd/system/ollama.service.d
+    state: directory
+    mode: "0755"
+
+- name: Configure Ollama systemd override
+  ansible.builtin.template:
+    src: ollama-override.conf.j2
+    dest: /etc/systemd/system/ollama.service.d/override.conf
+    mode: "0644"
+  notify: restart ollama
+
+- name: Ensure Ollama is enabled and running
+  ansible.builtin.systemd:
+    name: ollama
+    enabled: true
+    state: started
+    daemon_reload: true
+
+# ── Wait for Ollama to be ready ─────────────────────────────
+
+- name: Wait for Ollama API to be ready
+  ansible.builtin.uri:
+    url: "http://localhost:{{ ollama_port }}/api/tags"
+    method: GET
+    status_code: 200
+  register: ollama_ready
+  until: ollama_ready.status == 200
+  retries: 30
+  delay: 2
+
+# ── Pull models ─────────────────────────────────────────────
+
+- name: Pull LLM model
+  ansible.builtin.command: "ollama pull {{ ollama_model }}"
+  register: pull_llm
+  changed_when: "'pulling' in pull_llm.stdout"
+  async: 1800
+  poll: 30
+
+- name: Pull embedding model
+  ansible.builtin.command: "ollama pull {{ ollama_embed_model }}"
+  register: pull_embed
+  changed_when: "'pulling' in pull_embed.stdout"
+  async: 600
+  poll: 15
+
+- name: Verify GPU access
+  ansible.builtin.command: nvidia-smi
+  register: gpu_status
+  changed_when: false
+  failed_when: false
+
+- name: Display GPU status
+  ansible.builtin.debug:
+    var: gpu_status.stdout_lines
+  when: gpu_status.rc == 0
+
+- name: List installed models
+  ansible.builtin.command: ollama list
+  register: ollama_models
+  changed_when: false
+
+- name: Display installed models
+  ansible.builtin.debug:
+    var: ollama_models.stdout_lines
