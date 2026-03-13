@@ -1,0 +1,25 @@
+services:
+  terraform:
+    image: hashicorp/terraform:1.10
+    working_dir: /workspace
+    volumes:
+      # Terraform config files
+      - .:/workspace
+      # AWS credentials from host
+      - ~/.aws:/root/.aws:ro
+      # Persist Terraform state and plugins locally
+      - terraform-data:/workspace/.terraform
+      - terraform-plugins:/root/.terraform.d
+    environment:
+      # Pass AWS credentials via env vars (alternative to ~/.aws)
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+      - AWS_SESSION_TOKEN
+      - AWS_DEFAULT_REGION
+      - AWS_PROFILE
+    entrypoint: [""]
+    command: ["sh", "-c", "echo 'Use: ./tf.sh <command>' "]
+
+volumes:
+  terraform-data:
+  terraform-plugins:

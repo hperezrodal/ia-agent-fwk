@@ -1,0 +1,28 @@
+# ─────────────────────────────────────────────────────────────
+# Copy this file to terraform.tfvars and fill in your values
+# ─────────────────────────────────────────────────────────────
+
+aws_region    = "us-east-1"
+project_name  = "ia-agent-fwk"
+environment   = "staging"
+
+# Instance — g5.xlarge (A10G 24GB) for Qwen3-30B + embeddings
+instance_type    = "g5.xlarge"
+spot_max_price   = "0.50"
+root_volume_size = 100
+
+# SSH key pair — must exist in AWS already
+# Create one: aws ec2 create-key-pair --key-name ia-agent-fwk --query 'KeyMaterial' --output text > ~/.ssh/ia-agent-fwk.pem
+key_pair_name = "ia-agent-fwk"
+
+# Network access — REPLACE with your IP
+# Find your IP: curl ifconfig.me
+allowed_ssh_cidrs = ["YOUR_IP/32"]
+allowed_api_cidrs = ["YOUR_IP/32"]
+
+# VPC/Subnet — leave empty for default VPC
+vpc_id    = ""
+subnet_id = ""
+
+# Models to pre-load on boot
+ollama_models = ["qwen3:30b-a3b-q4_K_M", "nomic-embed-text"]
