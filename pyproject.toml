@@ -57,6 +57,7 @@ huggingface = [
     "accelerate>=0.25",
 ]
 rag = [
+    "pymupdf>=1.24",
     "pypdf>=4.0",
     "beautifulsoup4>=4.12",
     "lxml>=5.0",
@@ -141,6 +142,21 @@ ignore = [
     "ASYNC240", # sync pathlib in async loaders (local filesystem I/O)
     "PLC0415",  # imports inside try/except for optional deps
 ]
+"src/ia_agent_fwk/ingestion/**/*.py" = [
+    "D",       # docstring formatting (migrated code, cleanup later)
+    "PLR2004", # magic values (thresholds used in heuristics)
+    "PLR0912", # too many branches (complex parsers)
+    "PLR0913", # too many arguments (architectural in worker/orchestrator ctors)
+    "PLR0915", # too many statements (complex parsers)
+    "C901",    # complexity (recursive split, block parser)
+    "S107",    # possible hardcoded password (defaults for local dev)
+    "FBT001",  # boolean positional argument
+    "FBT002",  # boolean default positional argument
+    "ANN202",  # missing return type for private methods
+    "SIM103",  # return condition directly
+    "TC001",   # type-checking block imports
+    "TC003",   # stdlib imports in type-checking block
+]
 "tests/**/*.py" = [
     "S101",    # assert is fine in tests
     "ANN",     # no type annotations required in tests
@@ -155,6 +171,7 @@ ignore = [
     "RUF012",  # mutable class defaults in mock classes
     "FBT003",  # boolean positional values in patch() calls
     "PERF401", # async list comprehensions (readability in tests)
+    "S106",    # hardcoded test tokens/passwords are fine in tests
 ]
 
 [tool.ruff.lint.isort]
@@ -270,6 +287,51 @@ ignore_missing_imports = true
 [[tool.mypy.overrides]]
 module = "slack_sdk.*"
 ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["fastembed", "fastembed.*"]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["sentence_transformers", "sentence_transformers.*"]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "langdetect"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["docling", "docling.*"]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["fitz", "pymupdf"]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "pytesseract"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "pdf2image"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["minio", "minio.*"]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["pdfplumber", "pdfplumber.*"]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "ia_agent_fwk.ingestion.*"
+strict = false
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+warn_return_any = false
+check_untyped_defs = false
+disable_error_code = ["type-arg", "no-any-return", "attr-defined", "arg-type", "operator", "misc", "union-attr", "no-untyped-def", "no-untyped-call", "import-not-found"]
 
 [[tool.mypy.overrides]]
 module = "tests.*"
