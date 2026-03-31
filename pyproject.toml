@@ -157,6 +157,18 @@ ignore = [
     "TC001",   # type-checking block imports
     "TC003",   # stdlib imports in type-checking block
 ]
+"src/ia_agent_fwk/conversation/**/*.py" = [
+    "D",       # docstring formatting
+    "PLR2004", # magic values
+    "PLR0913", # too many arguments
+    "C901",    # complexity
+    "SLF001",  # private member access (endpoints access agent._session)
+    "TC001",   # type-checking block imports
+    "TC002",   # type-checking block imports (third-party)
+    "TC003",   # stdlib imports
+    "SIM105",  # contextlib.suppress
+    "SIM108",  # ternary operator
+]
 "tests/**/*.py" = [
     "S101",    # assert is fine in tests
     "ANN",     # no type annotations required in tests
@@ -323,6 +335,13 @@ ignore_missing_imports = true
 [[tool.mypy.overrides]]
 module = ["pdfplumber", "pdfplumber.*"]
 ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "ia_agent_fwk.conversation.*"
+strict = false
+disallow_untyped_defs = false
+warn_return_any = false
+disable_error_code = ["no-any-return", "attr-defined", "arg-type"]
 
 [[tool.mypy.overrides]]
 module = "ia_agent_fwk.ingestion.*"

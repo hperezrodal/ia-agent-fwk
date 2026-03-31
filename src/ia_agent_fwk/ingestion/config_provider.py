@@ -116,6 +116,14 @@ class RagConfigProvider:
         """Get a config value. Returns *default* if key doesn't exist."""
         return self._cache.get(key, default)
 
+    def require(self, key: str) -> Any:
+        """Get a config value. Raises KeyError if missing."""
+        value = self._cache.get(key)
+        if value is None:
+            msg = f"Required config key '{key}' not found for tenant '{self._tenant_id}'"
+            raise KeyError(msg)
+        return value
+
     def get_all(self) -> dict[str, Any]:
         """Get all cached config as a dict."""
         return dict(self._cache)
