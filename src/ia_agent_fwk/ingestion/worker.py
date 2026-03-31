@@ -60,6 +60,7 @@ class IngestionWorker:
         manifest: IngestionManifest,
         faq_ingestor: object | None = None,
         extra_metadata_fn: object | None = None,
+        save_parsed_dir: str | None = None,
     ) -> None:
         self._storage = storage
         self._store = store
@@ -67,6 +68,7 @@ class IngestionWorker:
         self._manifest = manifest
         self._faq_ingestor = faq_ingestor
         self._extra_metadata_fn = extra_metadata_fn
+        self._save_parsed_dir = save_parsed_dir
 
     async def run(self, prefix: str = "") -> dict:
         """Run one ingestion cycle.
@@ -146,6 +148,7 @@ class IngestionWorker:
         result = await self._orchestrator.process(
             file_path=str(local_path),
             extra_metadata=extra_metadata,
+            save_parsed=self._save_parsed_dir,
         )
 
         # Embed and store
