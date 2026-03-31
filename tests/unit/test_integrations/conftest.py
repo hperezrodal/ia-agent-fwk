@@ -111,8 +111,8 @@ class _MockLLMProvider(LLMProvider):
 def slack_integration():
     """Slack integration with test credentials."""
     return SlackIntegration(
-        bot_token="xoxb-test-token",  # noqa: S106
-        signing_secret="test-signing-secret",  # noqa: S106
+        bot_token="xoxb-test-token",
+        signing_secret="test-signing-secret",
         default_channel="#general",
     )
 
@@ -125,7 +125,7 @@ def email_integration():
         smtp_port=587,
         from_address="bot@test.com",
         username="bot@test.com",
-        password="test-password",  # noqa: S106
+        password="test-password",
     )
 
 
@@ -133,9 +133,9 @@ def email_integration():
 def whatsapp_integration():
     """WhatsApp integration with test credentials."""
     return WhatsAppIntegration(
-        access_token="test-access-token",  # noqa: S106
+        access_token="test-access-token",
         phone_number_id="123456789",
-        verify_token="test-verify-token",  # noqa: S106
+        verify_token="test-verify-token",
     )
 
 
@@ -191,13 +191,13 @@ def test_settings_integrations(monkeypatch) -> AppSettings:
         auth=AuthSettings(enabled=True),
         memory=MemorySettings(default_backend="in_memory"),
         integrations=IntegrationsSettings(
-            slack=SlackIntegrationSettings(enabled=True, bot_token="xoxb-test", default_agent="test"),  # noqa: S106
+            slack=SlackIntegrationSettings(enabled=True, bot_token="xoxb-test", default_agent="test"),
             email=EmailIntegrationSettings(enabled=True, default_agent="test"),
             whatsapp=WhatsAppIntegrationSettings(
                 enabled=True,
-                access_token="test-token",  # noqa: S106
+                access_token="test-token",
                 phone_number_id="123",
-                verify_token="test-verify",  # noqa: S106
+                verify_token="test-verify",
                 default_agent="test",
             ),
         ),
@@ -212,13 +212,13 @@ def test_settings_email_disabled(monkeypatch) -> AppSettings:
         auth=AuthSettings(enabled=True),
         memory=MemorySettings(default_backend="in_memory"),
         integrations=IntegrationsSettings(
-            slack=SlackIntegrationSettings(enabled=True, bot_token="xoxb-test", default_agent="test"),  # noqa: S106
+            slack=SlackIntegrationSettings(enabled=True, bot_token="xoxb-test", default_agent="test"),
             email=EmailIntegrationSettings(enabled=False),
             whatsapp=WhatsAppIntegrationSettings(
                 enabled=True,
-                access_token="test-token",  # noqa: S106
+                access_token="test-token",
                 phone_number_id="123",
-                verify_token="test-verify",  # noqa: S106
+                verify_token="test-verify",
                 default_agent="test",
             ),
         ),

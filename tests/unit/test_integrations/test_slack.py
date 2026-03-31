@@ -63,7 +63,7 @@ class TestSlackIntegration:
         )
 
     async def test_send_message_no_recipient_no_default(self):
-        integration = SlackIntegration(bot_token="xoxb-test", default_channel="")  # noqa: S106
+        integration = SlackIntegration(bot_token="xoxb-test", default_channel="")
         mock_client = AsyncMock(spec=httpx.AsyncClient)
         integration._client = mock_client
 
@@ -188,7 +188,7 @@ class TestSlackIntegration:
         assert result is False
 
     def test_verify_signature_no_secret(self):
-        integration = SlackIntegration(bot_token="xoxb-test", signing_secret="")  # noqa: S106
+        integration = SlackIntegration(bot_token="xoxb-test", signing_secret="")
         result = integration.verify_signature("123", "body", "v0=sig")
         assert result is False
 

@@ -121,7 +121,7 @@ class TestEmailImapInit:
             imap_host="imap.custom.com",
             imap_port=143,
             imap_username="imap@custom.com",
-            imap_password="imap-pass",  # noqa: S106
+            imap_password="imap-pass",
             imap_use_ssl=False,
         )
         assert ei._imap_host == "imap.custom.com"
