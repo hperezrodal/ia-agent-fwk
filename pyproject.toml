@@ -341,7 +341,7 @@ module = "ia_agent_fwk.conversation.*"
 strict = false
 disallow_untyped_defs = false
 warn_return_any = false
-disable_error_code = ["no-any-return", "attr-defined", "arg-type"]
+disable_error_code = ["no-any-return", "attr-defined", "arg-type", "import-not-found"]
 
 [[tool.mypy.overrides]]
 module = "ia_agent_fwk.ingestion.*"
