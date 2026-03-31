@@ -128,7 +128,7 @@ class ContextualEnricher:
         self,
         document: str,
         chunk: str,
-        max_retries: int = 3,
+        max_retries: int = 5,
     ) -> str:
         """Call _generate_context with exponential backoff on rate limits."""
         for attempt in range(max_retries + 1):
@@ -136,7 +136,7 @@ class ContextualEnricher:
                 result = await self._generate_context(document, chunk)
             except httpx.HTTPStatusError as exc:
                 if exc.response.status_code == 429 and attempt < max_retries:
-                    wait = 2 ** (attempt + 1)
+                    wait = 5 * (2**attempt)
                     logger.info(
                         "Rate limited, waiting %ds (attempt %d/%d)",
                         wait,
@@ -148,7 +148,7 @@ class ContextualEnricher:
                 raise
             else:
                 # Small delay between calls to avoid hitting rate limits
-                await asyncio.sleep(0.5)
+                await asyncio.sleep(3.0)
                 return result
         return ""
 
