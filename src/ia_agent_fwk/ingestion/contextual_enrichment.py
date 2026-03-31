@@ -7,16 +7,19 @@ the document. This context is prepended to the chunk content before embedding.
 Based on: https://www.anthropic.com/news/contextual-retrieval
 
 Usage:
-    enricher = ContextualEnricher(
-        ollama_url="http://localhost:11434",
-        model="llama3.1:8b",
-    )
+    # Ollama (default)
+    enricher = ContextualEnricher(model="llama3.1:8b")
+
+    # OpenAI
+    enricher = ContextualEnricher(provider="openai", model="gpt-4o", api_key="sk-...")
+
     chunks = await enricher.enrich(chunks, full_document_text)
 """
 
 from __future__ import annotations
 
 import logging
+import os
 
 import httpx
 
@@ -46,25 +49,32 @@ class ContextualEnricher:
 
     Parameters
     ----------
-    ollama_url:
-        Ollama API URL.
+    provider:
+        LLM provider: "ollama" or "openai".
     model:
-        LLM model name (e.g. "llama3.1:8b").
+        LLM model name (e.g. "llama3.1:8b", "gpt-4o").
+    api_key:
+        API key for OpenAI. Falls back to OPENAI_API_KEY env var.
+    ollama_url:
+        Ollama API URL (only used when provider="ollama").
     max_doc_chars:
         Truncate document to this many chars (to fit in context window).
-        llama3.1:8b has 128K context, so 100K chars is safe.
 
     """
 
     def __init__(
         self,
-        ollama_url: str = "http://localhost:11434",
+        provider: str = "ollama",
         model: str = "llama3.1:8b",
+        api_key: str | None = None,
+        ollama_url: str = "http://localhost:11434",
         max_doc_chars: int = 100_000,
         prompt_template: str | None = None,
     ) -> None:
-        self._url = ollama_url
+        self._provider = provider
         self._model = model
+        self._api_key = api_key or os.environ.get("OPENAI_API_KEY", "")
+        self._ollama_url = ollama_url
         self._max_doc_chars = max_doc_chars
         self._prompt_template = prompt_template or DEFAULT_PROMPT_TEMPLATE
         self._client = httpx.AsyncClient(timeout=120.0)
@@ -114,11 +124,17 @@ class ContextualEnricher:
         return chunks
 
     async def _generate_context(self, document: str, chunk: str) -> str:
-        """Call Ollama to generate context for a chunk."""
+        """Call LLM to generate context for a chunk."""
         prompt = self._prompt_template.format(document=document, chunk=chunk)
 
+        if self._provider == "openai":
+            return await self._generate_openai(prompt)
+        return await self._generate_ollama(prompt)
+
+    async def _generate_ollama(self, prompt: str) -> str:
+        """Call Ollama API."""
         response = await self._client.post(
-            f"{self._url}/api/generate",
+            f"{self._ollama_url}/api/generate",
             json={
                 "model": self._model,
                 "prompt": prompt,
@@ -131,3 +147,21 @@ class ContextualEnricher:
         )
         response.raise_for_status()
         return response.json().get("response", "").strip()
+
+    async def _generate_openai(self, prompt: str) -> str:
+        """Call OpenAI Chat Completions API."""
+        response = await self._client.post(
+            "https://api.openai.com/v1/chat/completions",
+            headers={
+                "Authorization": f"Bearer {self._api_key}",
+                "Content-Type": "application/json",
+            },
+            json={
+                "model": self._model,
+                "messages": [{"role": "user", "content": prompt}],
+                "temperature": 0.0,
+                "max_tokens": 150,
+            },
+        )
+        response.raise_for_status()
+        return response.json()["choices"][0]["message"]["content"].strip()

@@ -73,6 +73,7 @@ class IngestionOrchestrator:
         chunk_size: int = 1000,
         chunk_overlap: int = 200,
         contextual_model: str | None = None,
+        contextual_provider: str = "ollama",
         config_provider: object | None = None,
     ) -> None:
         self._classifier = DocumentClassifier()
@@ -82,6 +83,7 @@ class IngestionOrchestrator:
             chunk_overlap=chunk_overlap,
         )
         self._contextual_model = contextual_model
+        self._contextual_provider = contextual_provider
         self._contextual_enricher: ContextualEnricher | None = None  # lazy init
         self._config_provider = config_provider
 
@@ -136,7 +138,10 @@ class IngestionOrchestrator:
             if self._contextual_enricher is None:
                 from ia_agent_fwk.ingestion.contextual_enrichment import ContextualEnricher  # noqa: PLC0415
 
-                self._contextual_enricher = ContextualEnricher(model=self._contextual_model)
+                self._contextual_enricher = ContextualEnricher(
+                    provider=self._contextual_provider,
+                    model=self._contextual_model,
+                )
             chunks = await self._contextual_enricher.enrich(chunks, text)
 
         # 5. Enrich (composable pipeline of enrichers)
