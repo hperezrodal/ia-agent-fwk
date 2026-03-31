@@ -18,6 +18,7 @@ Usage:
 
 from __future__ import annotations
 
+import asyncio
 import logging
 import os
 
@@ -106,7 +107,7 @@ class ContextualEnricher:
                 continue
 
             try:
-                context = await self._generate_context(doc_text, chunk.content)
+                context = await self._generate_with_retry(doc_text, chunk.content)
                 if context:
                     chunk.content = f"{context}\n\n{chunk.content}"
                     enriched += 1
@@ -122,6 +123,34 @@ class ContextualEnricher:
             total,
         )
         return chunks
+
+    async def _generate_with_retry(
+        self,
+        document: str,
+        chunk: str,
+        max_retries: int = 3,
+    ) -> str:
+        """Call _generate_context with exponential backoff on rate limits."""
+        for attempt in range(max_retries + 1):
+            try:
+                result = await self._generate_context(document, chunk)
+            except httpx.HTTPStatusError as exc:
+                if exc.response.status_code == 429 and attempt < max_retries:
+                    wait = 2 ** (attempt + 1)
+                    logger.info(
+                        "Rate limited, waiting %ds (attempt %d/%d)",
+                        wait,
+                        attempt + 1,
+                        max_retries,
+                    )
+                    await asyncio.sleep(wait)
+                    continue
+                raise
+            else:
+                # Small delay between calls to avoid hitting rate limits
+                await asyncio.sleep(0.5)
+                return result
+        return ""
 
     async def _generate_context(self, document: str, chunk: str) -> str:
         """Call LLM to generate context for a chunk."""
