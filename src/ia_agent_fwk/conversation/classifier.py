@@ -67,7 +67,10 @@ class MessageClassifier:
             Last RAG context for this session. Returned if mode=CHAT.
 
         """
-        # Format recent history (empty string if no history)
+        if not history:
+            return ClassifyResult(mode="search", search_query=message)
+
+        # Format recent history
         recent = history[-self._history_window :]
         history_text = "\n".join(
             f"{'Usuario' if m['role'] == 'user' else 'Asesor'}: {m['content'][:150]}" for m in recent
